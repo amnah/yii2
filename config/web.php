@@ -14,12 +14,18 @@ $config = [
         'request' => [
             'cookieValidationKey' => env('YII_KEY'),
         ],
-        'cache' => [
-            'class' => 'yii\caching\FileCache',
-        ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+        ],
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+        ],
+        'session' => [
+            'class' => 'yii\redis\Session',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -48,10 +54,10 @@ $config = [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-            'username' => 'root',
-            'password' => '',
-            'tablePrefix' => env('DB_PREFIX'),
+            'dsn' => env('DB_DSN'),
+            'username' => env('DB_USER'),
+            'password' => env('DB_PASS'),
+            'tablePrefix' => env('DB_TABLE_PREFIX'),
             'charset' => 'utf8',
             'enableSchemaCache' => YII_ENV_PROD,
         ],
