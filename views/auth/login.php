@@ -1,43 +1,82 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model app\models\LoginForm */
+/** @var yii\web\View $this */
+/** @var yii\base\DynamicModel $model */
 
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Login</div>
+                <div class="panel-body">
 
-    <p>Please fill out the following fields to login:</p>
+                    <?= Html::beginForm('', 'post', ['class' => 'form-horizontal']) ?>
 
-    <?php $form = ActiveForm::begin([
-        'id' => 'login-form',
-        'layout' => 'horizontal',
-        'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
-        ],
-    ]); ?>
+                    <div class="form-group <?= $model->hasErrors('email') ? 'has-error' : '' ?>">
+                        <?= Html::activeLabel($model, 'email', ['class' => 'col-md-4 control-label']) ?>
 
-        <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
+                        <div class="col-md-6">
+                            <?= Html::activeTextInput($model, 'email', [
+                                'class' => 'form-control',
+                                'required' => true,
+                                'autofocus' => true,
+                            ]); ?>
 
-        <?= $form->field($model, 'password')->passwordInput() ?>
+                            <?php if ($model->hasErrors('email')): ?>
+                            <span class="help-block">
+                                <strong><?= Html::error($model, 'email') ?></strong>
+                            </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
 
-        <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-        ]) ?>
+                    <div class="form-group <?= $model->hasErrors('password') ? 'has-error' : '' ?>">
+                        <?= Html::activeLabel($model, 'password', ['class' => 'col-md-4 control-label']) ?>
 
-        <div class="form-group">
-            <div class="col-lg-offset-1 col-lg-11">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                        <div class="col-md-6">
+                            <?= Html::activePasswordInput($model, 'password', [
+                                'class' => 'form-control',
+                                'required' => true,
+                            ]); ?>
+
+                            <?php if ($model->hasErrors('password')): ?>
+                            <span class="help-block">
+                                <strong><?= Html::error($model, 'password') ?></strong>
+                            </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-4">
+                            <div class="checkbox">
+                                <?= Html::activeCheckbox($model, 'rememberMe') ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-4">
+                            <button type="submit" class="btn btn-primary">
+                                Login
+                            </button>
+
+                            <a class="btn btn-link" href="<?= Url::to('/auth/forgot') ?>">
+                                Forgot Your Password?
+                            </a>
+                        </div>
+                    </div>
+
+                    <?= Html::endForm() ?>
+
+                </div>
             </div>
         </div>
-
-    <?php ActiveForm::end(); ?>
-
+    </div>
 </div>

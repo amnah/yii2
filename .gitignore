@@ -31,3 +31,9 @@ tests/_support/_generated
 
 # env file
 env.php
+
+# node
+node_modules
+
+# compiled gulp assets
+/web/compiled*

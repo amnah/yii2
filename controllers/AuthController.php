@@ -39,7 +39,7 @@ class AuthController extends Controller
         // create ad hoc model for validation
         $defaultAttributes = ['email' => '', 'password' => '', 'rememberMe' => true];
         $model = new DynamicModel($defaultAttributes);
-        $model->addRule(['email', 'password'], 'required');
+        $model->addRule(['email', 'password'], 'required')->addRule(['rememberMe'], 'boolean');
 
         /** @var User $user */
         // validate data and check user/password
@@ -53,7 +53,8 @@ class AuthController extends Controller
             }
 
             if (!$model->hasErrors()) {
-                Yii::$app->user->login($user, 2592000);// 30 days
+                $duration = $model->rememberMe ? 2592000 : 0; // 30 days
+                Yii::$app->user->login($user, $duration);
                 return $this->goBack();
             }
         }
