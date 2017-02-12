@@ -24,14 +24,14 @@ class m170211_045628_create_user_table extends Migration
             'password' => $this->string()->null(),
             'confirmation' => $this->string()->null(),
             'auth_key' => $this->string()->null(),
-            'created_at' => $this->timestamp(),
-            'updated_at' => $this->timestamp(),
+            'created_at' => $this->timestamp()->null(),
+            'updated_at' => $this->timestamp()->null(),
         ], $tableOptions);
         $this->createTable('{{%password_reset}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->unsigned()->notNull(),
             'token' => $this->string()->unique(),
-            'created_at' => $this->timestamp(),
+            'created_at' => $this->timestamp()->null(),
             'consumed_at' => $this->timestamp()->null(),
         ], $tableOptions);
 
