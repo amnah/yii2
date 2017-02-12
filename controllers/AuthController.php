@@ -90,10 +90,7 @@ class AuthController extends Controller
 
             // send confirmation email
             $user->setConfirmationToken()->save(false);
-            Yii::$app->mailer->compose('auth/confirmEmail', ['user' => $user])
-                ->setTo($user->email)
-                ->setSubject(trans('auth.confirmSubject'))
-                ->send();
+            mailer()->sendConfirmationEmail($user);
 
             return $this->render('registered', [
                 'user' => $user
