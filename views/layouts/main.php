@@ -52,7 +52,9 @@ $request = Yii::$app->request;
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
+                    <li><a href="<?= url('/site/about') ?>">About</a></li>
+                    <li><a href="<?= url('/site/contact') ?>">Contact</a></li>
+
                     <?php if (!$user): ?>
                         <li><a href="<?= url('/auth/login') ?>">Login</a></li>
                         <li><a href="<?= url('/auth/register') ?>">Register</a></li>
@@ -61,9 +63,7 @@ $request = Yii::$app->request;
                             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <?= $user->username ?> <span class="caret"></span>
                             </a>
-
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="<?= url('/') ?>">Home</a></li>
                                 <li>
                                     <a href="<?= url('/logout') ?>" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         Logout

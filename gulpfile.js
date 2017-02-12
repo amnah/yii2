@@ -39,7 +39,7 @@ const distPath = './web/compiled';
 // -------------------------------------------------------------
 const pollInterval = 350;
 const customOpts = {
-    entries: [`${assetPath}/js/app.js`],
+    entries: [`${assetPath}/js/main.js`],
     debug: true
 };
 const browserifyOpts = assign({}, watchify.args, customOpts);
