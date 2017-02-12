@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\base\DynamicModel;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use app\models\User;
@@ -16,6 +17,13 @@ class AuthController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    ['allow' => true, 'roles' => ['@'], 'actions' => ['logout']],
+                    ['allow' => true, 'roles' => ['?']],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
