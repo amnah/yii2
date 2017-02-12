@@ -69,4 +69,47 @@ class BaseModel extends \yii\db\ActiveRecord
         }
         return $this->save(true, $attributeNames);
     }
+
+    /**
+     * Find first record or create new model object
+     * @param array $attributes
+     * @return static
+     */
+    public static function firstOrNew($attributes)
+    {
+        $model = static::findOne($attributes);
+        if (!$model) {
+            $model = new static;
+            $model->setAttributes($attributes, false);
+        }
+        return $model;
+    }
+
+    /**
+     * Find first record or create+save new model object
+     * @param array $attributes
+     * @return static
+     */
+    public static function firstOrCreate($attributes)
+    {
+        $model = static::firstOrNew($attributes);
+        if ($model->isNewRecord) {
+            $model->save();
+        }
+        return $model;
+    }
+
+    /**
+     * Find first record or create, and then update attributes
+     * @param array $attributes
+     * @param array $values
+     * @return static
+     */
+    public static function updateOrCreate($attributes, $values)
+    {
+        $model = static::firstOrNew($attributes);
+        $model->setAttributes($values, false);
+        $model->save();
+        return $model;
+    }
 }

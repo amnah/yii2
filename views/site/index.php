@@ -14,8 +14,15 @@ $this->title = 'My Yii Application';
                 <div class="panel-heading">Welcome!</div>
 
                 <div class="panel-body">
+
+                    <?php if (Yii::$app->session->has('status')): ?>
+                    <div class="alert alert-success">
+                        <?= Yii::$app->session->getFlash('status') ?>
+                    </div>
+                    <?php endif; ?>
+
                     <?php if (Yii::$app->user->id): ?>
-                        <p><a href="<?= Url::to('/user') ?>">User home</a></p>
+                        <p>Logged in as <?= Yii::$app->user->identity->email ?></p>
                     <?php else: ?>
                         <p><a href="<?= Url::to('/auth/login') ?>">Login</a></p>
                         <p><a href="<?= Url::to('/auth/forgot') ?>">Forgot</a></p>

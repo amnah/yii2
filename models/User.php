@@ -23,19 +23,6 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-            [['email', 'username', 'password'], 'required'],
-            [['email', 'username', 'password'], 'string', 'max' => 255],
-            [['email'], 'unique'],
-            [['username'], 'unique'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
         return [
@@ -104,13 +91,17 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
      */
     public function beforeSave($insert)
     {
-        if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
-                $this->auth_key = Yii::$app->getSecurity()->generateRandomString(60);
-            }
-            return true;
+        if (!parent::beforeSave($insert)) {
+            return false;
         }
-        return false;
+
+        if ($this->isNewRecord) {
+            $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
+        }
+        if (isset($this->getDirtyAttributes()['password'])) {
+            $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+        }
+        return true;
     }
 
     /**
@@ -121,5 +112,24 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    /**
+     * Set confirmation token
+     * @return static
+     */
+    public function setConfirmationToken()
+    {
+        $this->confirmation = Yii::$app->getSecurity()->generateRandomString();
+        return $this;
+    }
+
+    /**
+     * Confirm email address by emptying the field
+     */
+    public function confirmEmail()
+    {
+        $this->confirmation = null;
+        $this->save();
     }
 }
