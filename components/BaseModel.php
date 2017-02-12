@@ -43,31 +43,28 @@ class BaseModel extends \yii\db\ActiveRecord
      * Load post data into model and validate
      * Returns null if no post data is loaded. Otherwise returns validation result
      * @param string $formName
-     * @param array $attributeNames
-     * @param bool $clearErrors
      * @return bool|null
      */
-    public function loadPostAndValidate($formName = null, $attributeNames = null, $clearErrors = true)
+    public function loadPostAndValidate($formName = null)
     {
         if (!$this->loadPost($formName)) {
             return null;
         }
-        return $this->validate($attributeNames, $clearErrors);
+        return $this->validate();
     }
 
     /**
      * Load post data into model and save (with validation)
      * Returns null if no post data is loaded. Otherwise returns save result
      * @param string $formName
-     * @param array $attributeNames
      * @return bool|null
      */
-    public function loadPostAndSave($formName = "", $attributeNames = null)
+    public function loadPostAndSave($formName = null)
     {
         if (!$this->loadPost($formName)) {
             return null;
         }
-        return $this->save(true, $attributeNames);
+        return $this->save();
     }
 
     /**
@@ -109,7 +106,7 @@ class BaseModel extends \yii\db\ActiveRecord
     {
         $model = static::firstOrNew($attributes);
         $model->setAttributes($values, false);
-        $model->save();
+        $model->save(false);
         return $model;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /** @var yii\web\View $this */
-/** @var yii\base\DynamicModel $model */
+/** @var app\models\User $user */
 
 use yii\helpers\Html;
 
@@ -18,74 +18,74 @@ $this->title = 'Register';
                     <?= Html::beginForm('', 'post', ['class' => 'form-horizontal']) ?>
 
                     <?php $field = 'email'; ?>
-                    <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
-                        <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
+                    <div class="form-group <?= $user->hasErrors($field) ? 'has-error' : '' ?>">
+                        <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
 
                         <div class="col-md-6">
-                            <?= Html::activeTextInput($model, $field, [
+                            <?= Html::activeTextInput($user, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
                                 'type' => 'email',
                                 'autofocus' => true,
                             ]); ?>
 
-                            <?php if ($model->hasErrors($field)): ?>
+                            <?php if ($user->hasErrors($field)): ?>
                                 <span class="help-block">
-                                <strong><?= Html::error($model, $field) ?></strong>
+                                <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
                         </div>
                     </div>
 
                     <?php $field = 'username'; ?>
-                    <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
-                        <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
+                    <div class="form-group <?= $user->hasErrors($field) ? 'has-error' : '' ?>">
+                        <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
 
                         <div class="col-md-6">
-                            <?= Html::activeTextInput($model, $field, [
+                            <?= Html::activeTextInput($user, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
                             ]); ?>
 
-                            <?php if ($model->hasErrors($field)): ?>
+                            <?php if ($user->hasErrors($field)): ?>
                                 <span class="help-block">
-                                <strong><?= Html::error($model, $field) ?></strong>
+                                <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
                         </div>
                     </div>
 
                     <?php $field = 'password'; ?>
-                    <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
-                        <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
+                    <div class="form-group <?= $user->hasErrors($field) ? 'has-error' : '' ?>">
+                        <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
 
                         <div class="col-md-6">
-                            <?= Html::activePasswordInput($model, $field, [
+                            <?= Html::activePasswordInput($user, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
                             ]); ?>
 
-                            <?php if ($model->hasErrors($field)): ?>
+                            <?php if ($user->hasErrors($field)): ?>
                                 <span class="help-block">
-                                <strong><?= Html::error($model, $field) ?></strong>
+                                <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
                         </div>
                     </div>
 
                     <?php $field = 'confirm_password'; ?>
-                    <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
-                        <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
+                    <div class="form-group <?= $user->hasErrors($field) ? 'has-error' : '' ?>">
+                        <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
 
                         <div class="col-md-6">
-                            <?= Html::activePasswordInput($model, $field, [
+                            <?= Html::activePasswordInput($user, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
                             ]); ?>
 
-                            <?php if ($model->hasErrors($field)): ?>
+                            <?php if ($user->hasErrors($field)): ?>
                                 <span class="help-block">
-                                <strong><?= Html::error($model, $field) ?></strong>
+                                <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
                         </div>

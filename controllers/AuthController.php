@@ -48,7 +48,7 @@ class AuthController extends Controller
         // find user, validate password, and check if user is confirmed
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $field = filter_var($model->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-            $user = User::findOne([$field => $model->email]);
+            $user = User::findOne([$field => trim($model->email)]);
             if (!$user || !$user->validatePassword($model->password)) {
                 $model->addError('email', trans('auth.failed'));
             } elseif ($user->confirmation) {
@@ -81,47 +81,27 @@ class AuthController extends Controller
      */
     public function actionRegister()
     {
-        $defaultAttributes = ['email' => '', 'username' => '', 'password' => '', 'confirm_password' => ''];
-        $model = new DynamicModel($defaultAttributes);
-        $model->addRule(['email', 'username', 'password', 'confirm_password'], 'required')
-            ->addRule(['email', 'username'], 'trim')
-            ->addRule(['email'], 'unique', ['targetClass' => User::className()])
-            ->addRule(['username'], 'unique', ['targetClass' => User::className()])
-            ->addRule(['username'], 'match', ['pattern' => '/^[A-Za-z0-9_]+$/', 'message' => trans('auth.alphanumeric')])
-            ->addRule(['password'], 'string', ['min' => 3])
-            ->addRule(['password'], 'compare', ['compareAttribute' => 'confirm_password']);
+        $user = new User;
+        $user->setScenario(User::SCENARIO_REGISTER);
+        if ($user->loadPostAndSave()) {
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $attributes = $model->getAttributes(['email', 'username', 'password']);
-            $user = new User($attributes);
-            return $this->performRegistration($user);
+            // log user in directly
+            //return $this->performLogin($user);
+
+            // send confirmation email
+            $user->setConfirmationToken()->save(false);
+            Yii::$app->mailer->compose('auth/confirmEmail', ['user' => $user])
+                ->setTo($user->email)
+                ->setSubject(trans('auth.confirmSubject'))
+                ->send();
+
+            return $this->render('registered', [
+                'user' => $user
+            ]);
         }
 
         return $this->render('register', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Perform registration
-     * @param User $user
-     * @return string
-     */
-    protected function performRegistration($user)
-    {
-        // log in directly
-//        $user->save();
-//        return $this->performLogin($user);
-
-        // send confirmation email
-        $user->setConfirmationToken()->save();
-        Yii::$app->mailer->compose('auth/confirmEmail', ['user' => $user])
-            ->setTo($user->email)
-            ->setSubject(trans('auth.confirmSubject'))
-            ->send();
-
-        return $this->render('registered', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -133,7 +113,7 @@ class AuthController extends Controller
         // find and confirm user
         $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
         if ($user) {
-            $user->confirmEmail();
+            $user->clearConfirmationToken()->save(false);
             Yii::$app->session->setFlash('status', trans('auth.confirmed'));
             return $this->performLogin($user);
         }

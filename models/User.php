@@ -21,19 +21,58 @@ use Yii;
 class User extends \app\components\BaseModel implements \yii\web\IdentityInterface
 {
     /**
+     * @var string
+     */
+    const SCENARIO_REGISTER = 'register';
+
+    /**
+     * @var string
+     */
+    public $confirm_password;
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            static::SCENARIO_REGISTER => ['email', 'username', 'password', 'confirm_password'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['email', 'username', 'password'], 'string', 'max' => 255],
+            [['email', 'username', 'password'], 'required'],
+            [['email', 'username'], 'trim'],
+            [['email'], 'unique'],
+            [['username'], 'unique'],
+            [['username'], 'string', 'min' => 2],
+            [['username'], 'match', 'pattern' => '/^[A-Za-z0-9_]+$/', 'message' => trans('auth.alphanumeric')],
+            [['password'], 'string', 'min' => 3],
+            [['password'], 'compare', 'compareAttribute' => 'confirm_password'],
+            [['confirm_password'], 'safe'],
+        ];
+    }
+
+    /**
      * @inheritdoc
      */
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'email' => Yii::t('app', 'Email'),
-            'username' => Yii::t('app', 'Username'),
-            'password' => Yii::t('app', 'Password'),
-            'confirmation' => Yii::t('app', 'Confirmation'),
-            'auth_key' => Yii::t('app', 'Auth Key'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'id' => trans('ID'),
+            'email' => trans('Email'),
+            'username' => trans('Username'),
+            'password' => trans('Password'),
+            'confirmation' => trans('Confirmation'),
+            'auth_key' => trans('Auth Key'),
+            'created_at' => trans('Created At'),
+            'updated_at' => trans('Updated At'),
         ];
     }
 
@@ -98,7 +137,7 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
         if ($this->isNewRecord) {
             $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
         }
-        if (isset($this->getDirtyAttributes()['password'])) {
+        if (isset($this->dirtyAttributes['password'])) {
             $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
         }
         return true;
@@ -125,11 +164,11 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
     }
 
     /**
-     * Confirm email address by emptying the field
+     * Clear confirmation token
      */
-    public function confirmEmail()
+    public function clearConfirmationToken()
     {
         $this->confirmation = null;
-        $this->save();
+        return $this;
     }
 }
