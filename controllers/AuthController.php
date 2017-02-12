@@ -67,13 +67,14 @@ class AuthController extends Controller
      * Perform login
      * @param User $user
      * @param bool $rememberMe
+     * @param array|string $redirectUrl
      * @return \yii\web\Response
      */
-    protected function performLogin($user, $rememberMe = true)
+    protected function performLogin($user, $rememberMe = true, $redirectUrl = null)
     {
         $duration = $rememberMe ? 2592000 : 0; // 30 days
         Yii::$app->user->login($user, $duration);
-        return $this->goBack();
+        return $redirectUrl ? $this->redirect($redirectUrl) : $this->goBack();
     }
 
     /**
@@ -112,7 +113,7 @@ class AuthController extends Controller
         if ($user) {
             $user->clearConfirmationToken()->save(false);
             Yii::$app->session->setFlash('status', trans('auth.confirmed'));
-            return $this->performLogin($user);
+            return $this->performLogin($user, true, '/');
         }
 
         return $this->render('confirm');
