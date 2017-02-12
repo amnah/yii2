@@ -1,12 +1,10 @@
 <?php
 
-use yii\helpers\Url;
-
 /* @var $this \yii\web\View view component instance */
 /* @var $message \yii\mail\MessageInterface the message being composed */
 /* @var $user \app\models\User */
 
-$confirmUrl = Url::to(['auth/confirm', 'email' => $user->email, 'confirmation' => $user->confirmation], true);
+$confirmUrl = url(['auth/confirm', 'email' => $user->email, 'confirmation' => $user->confirmation], true);
 
 ?>
 <p>Hello <?= $user->email ?>.</p>

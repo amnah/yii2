@@ -45,20 +45,15 @@ class AuthController extends Controller
         $model->addRule(['email', 'password'], 'required')
             ->addRule(['rememberMe'], 'boolean');
 
+        // find user, validate password, and check if user is confirmed
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            // find user, validate password, and check if user is confirmed
             $field = filter_var($model->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
             $user = User::findOne([$field => $model->email]);
             if (!$user || !$user->validatePassword($model->password)) {
-                $model->addError('email', Yii::t('app', 'Invalid credentials'));
-            }
-            if ($user->confirmation) {
-                $model->addError('email', Yii::t('app', 'Email address has not been confirmed yet - please check your email.'));
-            }
-
-            // perform login
-            if (!$model->hasErrors()) {
+                $model->addError('email', trans('auth.failed'));
+            } elseif ($user->confirmation) {
+                $model->addError('email', trans('auth.unconfirmed'));
+            } else {
                 return $this->performLogin($user, $model->rememberMe);
             }
         }
@@ -92,7 +87,7 @@ class AuthController extends Controller
             ->addRule(['email', 'username'], 'trim')
             ->addRule(['email'], 'unique', ['targetClass' => User::className()])
             ->addRule(['username'], 'unique', ['targetClass' => User::className()])
-            ->addRule(['username'], 'match', ['pattern' => '/^[A-Za-z0-9_]+$/', 'message' => Yii::t('app', '{attribute} can contain only letters, numbers, and "_"')])
+            ->addRule(['username'], 'match', ['pattern' => '/^[A-Za-z0-9_]+$/', 'message' => trans('auth.alphanumeric')])
             ->addRule(['password'], 'string', ['min' => 3])
             ->addRule(['password'], 'compare', ['compareAttribute' => 'confirm_password']);
 
@@ -122,7 +117,7 @@ class AuthController extends Controller
         $user->setConfirmationToken()->save();
         Yii::$app->mailer->compose('auth/confirmEmail', ['user' => $user])
             ->setTo($user->email)
-            ->setSubject(Yii::t('app', 'Confirm Email'))
+            ->setSubject(trans('auth.confirmSubject'))
             ->send();
 
         return $this->render('registered', [
@@ -139,7 +134,7 @@ class AuthController extends Controller
         $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
         if ($user) {
             $user->confirmEmail();
-            Yii::$app->session->setFlash('status', Yii::t('app', 'Emailed confirmed'));
+            Yii::$app->session->setFlash('status', trans('auth.confirmed'));
             return $this->performLogin($user);
         }
 

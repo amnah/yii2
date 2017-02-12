@@ -4,7 +4,6 @@
 /** @var yii\base\DynamicModel $model */
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $this->title = 'Login';
 
@@ -69,7 +68,7 @@ $this->title = 'Login';
                                 Login
                             </button>
 
-                            <a class="btn btn-link" href="<?= Url::to('/auth/forgot') ?>">
+                            <a class="btn btn-link" href="<?= url('/auth/forgot') ?>">
                                 Forgot Your Password?
                             </a>
                         </div>

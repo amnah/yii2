@@ -5,7 +5,6 @@
 /** @var \app\models\User $user */
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $user = Yii::$app->user->identity;
 $request = Yii::$app->request;
@@ -40,7 +39,7 @@ $request = Yii::$app->request;
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="<?= Url::to('/') ?>">
+                <a class="navbar-brand" href="<?= url('/') ?>">
                     My company
                 </a>
             </div>
@@ -55,8 +54,8 @@ $request = Yii::$app->request;
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     <?php if (!$user): ?>
-                        <li><a href="<?= Url::to('/auth/login') ?>">Login</a></li>
-                        <li><a href="<?= Url::to('/auth/register') ?>">Register</a></li>
+                        <li><a href="<?= url('/auth/login') ?>">Login</a></li>
+                        <li><a href="<?= url('/auth/register') ?>">Register</a></li>
                     <?php else: ?>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -64,12 +63,12 @@ $request = Yii::$app->request;
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="<?= Url::to('/home') ?>">Home</a></li>
+                                <li><a href="<?= url('/home') ?>">Home</a></li>
                                 <li>
-                                    <a href="<?= Url::to('/logout') ?>" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <a href="<?= url('/logout') ?>" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
-                                    <form id="logout-form" action="<?= Url::to('/auth/logout') ?>" method="POST" style="display: none;">
+                                    <form id="logout-form" action="<?= url('/auth/logout') ?>" method="POST" style="display: none;">
                                         <input type="hidden" name="<?= $request->csrfParam ?>" value="<?= $request->csrfToken ?>">
                                     </form>
                                 </li>

@@ -8,6 +8,7 @@
 use yii\helpers\Html;
 
 $this->title = $name;
+
 ?>
 <div class="container">
     <div class="row">

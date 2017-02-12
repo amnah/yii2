@@ -2,8 +2,6 @@
 
 /** @var yii\web\View $this */
 
-use yii\helpers\Url;
-
 $this->title = 'My Yii Application';
 
 ?>
@@ -24,9 +22,9 @@ $this->title = 'My Yii Application';
                     <?php if (Yii::$app->user->id): ?>
                         <p>Logged in as <?= Yii::$app->user->identity->email ?></p>
                     <?php else: ?>
-                        <p><a href="<?= Url::to('/auth/login') ?>">Login</a></p>
-                        <p><a href="<?= Url::to('/auth/forgot') ?>">Forgot</a></p>
-                        <p><a href="<?= Url::to('/auth/register') ?>">Register</a></p>
+                        <p><a href="<?= url('/auth/login') ?>">Login</a></p>
+                        <p><a href="<?= url('/auth/forgot') ?>">Forgot</a></p>
+                        <p><a href="<?= url('/auth/register') ?>">Register</a></p>
                     <?php endif; ?>
                 </div>
             </div>

@@ -79,3 +79,25 @@ function isDebugEnabled()
     }
     return $result;
 }
+
+/**
+ * Get url
+ * @param array|string $url
+ * @param bool|string $scheme
+ * @return string
+ */
+function url($url = '', $scheme = false)
+{
+    return \yii\helpers\Url::to($url, $scheme);
+}
+
+/**
+ * Translate message
+ * @param $message
+ * @param array $params
+ * @return string
+ */
+function trans($message, $params = [])
+{
+    return Yii::t('app', $message, $params);
+}
