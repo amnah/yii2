@@ -70,9 +70,7 @@ class AuthController extends Controller
             }
         }
 
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        return $this->render('login', compact('model'));
     }
 
     /**
@@ -108,14 +106,10 @@ class AuthController extends Controller
             $mailer = Yii::$app->mailer;
             $mailer->sendConfirmationEmail($user);
 
-            return $this->render('registered', [
-                'user' => $user
-            ]);
+            return $this->render('registered', compact('user'));
         }
 
-        return $this->render('register', [
-            'user' => $user,
-        ]);
+        return $this->render('register', compact('user'));
     }
 
     /**
@@ -162,10 +156,7 @@ class AuthController extends Controller
             }
         }
 
-        return $this->render('forgot', [
-            'model' => $model,
-            'user' => $user,
-        ]);
+        return $this->render('forgot', compact('model', 'user'));
     }
 
     /**
@@ -177,14 +168,10 @@ class AuthController extends Controller
     {
         $passwordReset = PasswordReset::getByToken($token);
         if (!$passwordReset) {
-            return $this->render('reset', [
-                'passwordReset' => $passwordReset,
-            ]);
+            return $this->render('reset');
         }
 
-        // empty out password first
-        $passwordReset->user->password = '';
-        $passwordReset->user->setScenario(User::SCENARIO_RESET);
+        $passwordReset->user->clearPassword()->setScenario(User::SCENARIO_RESET);
         if ($passwordReset->user->loadPostAndSave()) {
             // consume $passwordReset and login
             $passwordReset->consume();
@@ -192,8 +179,6 @@ class AuthController extends Controller
             return $this->performLogin($passwordReset->user);
         }
 
-        return $this->render('reset', [
-            'passwordReset' => $passwordReset,
-        ]);
+        return $this->render('reset', compact('passwordReset'));
     }
 }

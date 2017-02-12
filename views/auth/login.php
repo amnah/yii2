@@ -20,57 +20,42 @@ $this->title = 'Login';
                     <?php $field = 'email'; ?>
                     <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
                         <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
-
                         <div class="col-md-6">
                             <?= Html::activeTextInput($model, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
                                 'autofocus' => true,
                             ]); ?>
-
-                            <?php if ($model->hasErrors($field)): ?>
                             <span class="help-block">
                                 <strong><?= Html::error($model, $field) ?></strong>
                             </span>
-                            <?php endif; ?>
                         </div>
                     </div>
 
                     <?php $field = 'password'; ?>
                     <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
                         <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
-
                         <div class="col-md-6">
                             <?= Html::activePasswordInput($model, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
                             ]); ?>
-
-                            <?php if ($model->hasErrors($field)): ?>
                             <span class="help-block">
                                 <strong><?= Html::error($model, $field) ?></strong>
                             </span>
-                            <?php endif; ?>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">
-                            <div class="checkbox">
-                                <?= Html::activeCheckbox($model, 'rememberMe') ?>
-                            </div>
+                            <div class="checkbox"><?= Html::activeCheckbox($model, 'rememberMe') ?></div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-md-8 col-md-offset-4">
-                            <button type="submit" class="btn btn-primary">
-                                Login
-                            </button>
-
-                            <a class="btn btn-link" href="<?= url('/auth/forgot') ?>">
-                                Forgot Your Password?
-                            </a>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                            <a class="btn btn-link" href="<?= url('/auth/forgot') ?>">Forgot Your Password?</a>
                         </div>
                     </div>
 

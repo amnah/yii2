@@ -15,7 +15,7 @@ $this->title = 'Reset Password';
                 <div class="panel-heading"><?= Html::encode($this->title) ?></div>
                 <div class="panel-body">
 
-                    <?php if (!$passwordReset): ?>
+                    <?php if (empty($passwordReset)): ?>
 
                         <p>Invalid token</p>
 
@@ -23,49 +23,50 @@ $this->title = 'Reset Password';
 
                         <?= Html::beginForm('', 'post', ['class' => 'form-horizontal']) ?>
 
+                        <?php $field = 'email'; ?>
+                        <div class="form-group">
+                            <?= Html::activeLabel($passwordReset->user, $field, ['class' => 'col-md-4 control-label']) ?>
+                            <div class="col-md-6">
+                                <?= Html::activeTextInput($passwordReset->user, $field, [
+                                    'class' => 'form-control',
+                                    'disabled' => true,
+                                ]); ?>
+                            </div>
+                        </div>
+
                         <?php $field = 'password'; ?>
                         <div class="form-group <?= $passwordReset->user->hasErrors($field) ? 'has-error' : '' ?>">
                             <?= Html::activeLabel($passwordReset->user, $field, ['class' => 'col-md-4 control-label']) ?>
-
                             <div class="col-md-6">
                                 <?= Html::activePasswordInput($passwordReset->user, $field, [
                                     'class' => 'form-control',
                                     'required' => true,
                                     'autofocus' => true,
                                 ]); ?>
-
-                                <?php if ($passwordReset->user->hasErrors($field)): ?>
                                 <span class="help-block">
                                     <strong><?= Html::error($passwordReset->user, $field) ?></strong>
                                 </span>
-                                <?php endif; ?>
                             </div>
                         </div>
 
                         <?php $field = 'confirm_password'; ?>
                         <div class="form-group <?= $passwordReset->user->hasErrors($field) ? 'has-error' : '' ?>">
                             <?= Html::activeLabel($passwordReset->user, $field, ['class' => 'col-md-4 control-label']) ?>
-
                             <div class="col-md-6">
                                 <?= Html::activePasswordInput($passwordReset->user, $field, [
                                     'class' => 'form-control',
                                     'required' => true,
                                     'autofocus' => true,
                                 ]); ?>
-
-                                <?php if ($passwordReset->user->hasErrors($field)): ?>
                                 <span class="help-block">
                                     <strong><?= Html::error($passwordReset->user, $field) ?></strong>
                                 </span>
-                                <?php endif; ?>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Reset Password
-                                </button>
+                                <button type="submit" class="btn btn-primary">Reset Password</button>
                             </div>
                         </div>
 

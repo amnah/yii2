@@ -136,10 +136,20 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
         if ($this->isNewRecord) {
             $this->auth_key = Yii::$app->getSecurity()->generateRandomString();
         }
-        if (isset($this->dirtyAttributes['password'])) {
+        if ($this->getDirtyAttributes(['password']) && $this->password) {
             $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
         }
         return true;
+    }
+
+    /**
+     * Clear password (for form in password reset page)
+     * @return static
+     */
+    public function clearPassword()
+    {
+        $this->password = '';
+        return $this;
     }
 
     /**

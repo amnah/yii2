@@ -29,7 +29,6 @@ $this->title = 'Forgot Password';
                         <?php $field = 'email'; ?>
                         <div class="form-group <?= $model->hasErrors($field) ? 'has-error' : '' ?>">
                             <?= Html::activeLabel($model, $field, ['class' => 'col-md-4 control-label']) ?>
-
                             <div class="col-md-6">
                                 <?= Html::activeTextInput($model, $field, [
                                     'class' => 'form-control',
@@ -37,20 +36,15 @@ $this->title = 'Forgot Password';
                                     'type' => 'email',
                                     'autofocus' => true,
                                 ]); ?>
-
-                                <?php if ($model->hasErrors($field)): ?>
                                 <span class="help-block">
                                     <strong><?= Html::error($model, $field) ?></strong>
                                 </span>
-                                <?php endif; ?>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Send Password Reset Link
-                                </button>
+                                <button type="submit" class="btn btn-primary">Send Password Reset Link</button>
                             </div>
                         </div>
 
