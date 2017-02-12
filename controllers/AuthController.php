@@ -7,6 +7,8 @@ use yii\base\DynamicModel;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use app\components\Mailer;
+use app\models\PasswordReset;
 use app\models\User;
 
 class AuthController extends Controller
@@ -35,6 +37,7 @@ class AuthController extends Controller
 
     /**
      * Logout
+     * @return string
      */
     public function actionLogout()
     {
@@ -45,6 +48,7 @@ class AuthController extends Controller
 
     /**
      * Login
+     * @return string
      */
     public function actionLogin()
     {
@@ -58,7 +62,7 @@ class AuthController extends Controller
             $field = filter_var($model->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
             $user = User::findOne([$field => trim($model->email)]);
             if (!$user || !$user->validatePassword($model->password)) {
-                $model->addError('email', trans('auth.failed'));
+                $model->addError('email', trans('auth.loginFailed'));
             } elseif ($user->confirmation) {
                 $model->addError('email', trans('auth.unconfirmed'));
             } else {
@@ -87,6 +91,7 @@ class AuthController extends Controller
 
     /**
      * Register
+     * @return string
      */
     public function actionRegister()
     {
@@ -98,8 +103,10 @@ class AuthController extends Controller
             //return $this->performLogin($user);
 
             // send confirmation email
-            $user->setConfirmationToken()->save(false);
-            mailer()->sendConfirmationEmail($user);
+            /** @var Mailer $mailer */
+            $user->setConfirmationToken();
+            $mailer = Yii::$app->mailer;
+            $mailer->sendConfirmationEmail($user);
 
             return $this->render('registered', [
                 'user' => $user
@@ -113,17 +120,80 @@ class AuthController extends Controller
 
     /**
      * Confirm
+     * @param string $email
+     * @param string $confirmation
+     * @return string
      */
     public function actionConfirm($email, $confirmation)
     {
         // find and confirm user
         $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
         if ($user) {
-            $user->clearConfirmationToken()->save(false);
+            $user->clearConfirmationToken();
             Yii::$app->session->setFlash('status', trans('auth.confirmed'));
             return $this->performLogin($user, true, '/');
         }
 
         return $this->render('confirm');
+    }
+
+    /**
+     * Forgot password
+     * @return string
+     */
+    public function actionForgot()
+    {
+        $defaultAttributes = ['email' => ''];
+        $model = new DynamicModel($defaultAttributes);
+        $model->addRule(['email'], 'required')
+            ->addRule(['email'], 'email');
+
+        // find user and generate $passwordReset token
+        $user = null;
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $user = User::findOne(['email' => trim($model->email)]);
+            if (!$user) {
+                $model->addError('email', trans('auth.forgotFailed'));
+            } else {
+                /** @var Mailer $mailer */
+                $passwordReset = PasswordReset::setTokenForUser($user->id);
+                $mailer = Yii::$app->mailer;
+                $mailer->sendResetEmail($passwordReset);
+            }
+        }
+
+        return $this->render('forgot', [
+            'model' => $model,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Reset password
+     * @param string $token
+     * @return string
+     */
+    public function actionReset($token)
+    {
+        $passwordReset = PasswordReset::getByToken($token);
+        if (!$passwordReset) {
+            return $this->render('reset', [
+                'passwordReset' => $passwordReset,
+            ]);
+        }
+
+        // empty out password first
+        $passwordReset->user->password = '';
+        $passwordReset->user->setScenario(User::SCENARIO_RESET);
+        if ($passwordReset->user->loadPostAndSave()) {
+            // consume $passwordReset and login
+            $passwordReset->consume();
+            Yii::$app->session->setFlash('status', trans('auth.resetSuccess'));
+            return $this->performLogin($passwordReset->user);
+        }
+
+        return $this->render('reset', [
+            'passwordReset' => $passwordReset,
+        ]);
     }
 }

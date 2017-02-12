@@ -23,9 +23,18 @@ class BaseModel extends \yii\db\ActiveRecord
      * Get value for TimestampBehavior
      * @return string
      */
-    public function getTimestampValue()
+    public static function getTimestampValue()
     {
         return date('Y-m-d H:i:s');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAttributes($values, $safeOnly = true)
+    {
+        parent::setAttributes($values, $safeOnly);
+        return $this;
     }
 
     /**

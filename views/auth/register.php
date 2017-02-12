@@ -12,7 +12,7 @@ $this->title = 'Register';
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+                <div class="panel-heading"><?= Html::encode($this->title) ?></div>
                 <div class="panel-body">
 
                     <?= Html::beginForm('', 'post', ['class' => 'form-horizontal']) ?>
@@ -30,7 +30,7 @@ $this->title = 'Register';
                             ]); ?>
 
                             <?php if ($user->hasErrors($field)): ?>
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
@@ -48,7 +48,7 @@ $this->title = 'Register';
                             ]); ?>
 
                             <?php if ($user->hasErrors($field)): ?>
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
@@ -66,7 +66,7 @@ $this->title = 'Register';
                             ]); ?>
 
                             <?php if ($user->hasErrors($field)): ?>
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>
@@ -84,7 +84,7 @@ $this->title = 'Register';
                             ]); ?>
 
                             <?php if ($user->hasErrors($field)): ?>
-                                <span class="help-block">
+                            <span class="help-block">
                                 <strong><?= Html::error($user, $field) ?></strong>
                             </span>
                             <?php endif; ?>

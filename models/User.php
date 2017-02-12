@@ -20,10 +20,8 @@ use Yii;
  */
 class User extends \app\components\BaseModel implements \yii\web\IdentityInterface
 {
-    /**
-     * @var string
-     */
     const SCENARIO_REGISTER = 'register';
+    const SCENARIO_RESET = 'reset';
 
     /**
      * @var string
@@ -37,6 +35,7 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
     {
         return [
             static::SCENARIO_REGISTER => ['email', 'username', 'password', 'confirm_password'],
+            static::SCENARIO_RESET => ['password', 'confirm_password'],
         ];
     }
 
@@ -160,15 +159,18 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
     public function setConfirmationToken()
     {
         $this->confirmation = Yii::$app->getSecurity()->generateRandomString();
+        $this->save(false);
         return $this;
     }
 
     /**
      * Clear confirmation token
+     * @return static
      */
     public function clearConfirmationToken()
     {
         $this->confirmation = null;
+        $this->save(false);
         return $this;
     }
 }

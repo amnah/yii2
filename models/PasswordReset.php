@@ -18,6 +18,11 @@ use Yii;
 class PasswordReset extends \app\components\BaseModel
 {
     /**
+     * @var int Number of minutes before token expires
+     */
+    const EXPIRE_MINUTES = 60;
+
+    /**
      * @inheritdoc
      */
     public function behaviors()
@@ -33,11 +38,11 @@ class PasswordReset extends \app\components\BaseModel
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'token' => Yii::t('app', 'Token'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'consumed_at' => Yii::t('app', 'Consumed At'),
+            'id' => trans('ID'),
+            'user_id' => trans('User ID'),
+            'token' => trans('Token'),
+            'created_at' => trans('Created At'),
+            'consumed_at' => trans('Consumed At'),
         ];
     }
 
@@ -47,5 +52,50 @@ class PasswordReset extends \app\components\BaseModel
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id'])->inverseOf('passwordResets');
+    }
+
+    /**
+     * Get model by token
+     * @param string $token
+     * @return static
+     */
+    public static function getByToken($token)
+    {
+        // check for token that hasn't been consumed and hasn't expired yet
+        /** @var static $model */
+        $seconds = static::EXPIRE_MINUTES * 60;
+        $createdAfter = date('Y-m-d H:i:s', time()-$seconds);
+        $model = static::find()
+            ->where(['token' => $token])
+            ->andWhere(['consumed_at' => null])
+            ->andWhere(['>=', 'created_at', $createdAfter])
+            ->one();
+        return $model;
+    }
+
+    /**
+     * Update or create token for user
+     * @param int $userId
+     * @return static
+     */
+    public static function setTokenForUser($userId)
+    {
+        return static::updateOrCreate([
+            'user_id' => $userId,
+            'consumed_at' => null,
+        ], [
+            'token' => Yii::$app->security->generateRandomString(),
+            'created_at' => static::getTimestampValue(),
+        ]);
+    }
+
+    /**
+     * Consume password reset
+     */
+    public function consume()
+    {
+        $this->consumed_at = $this->getTimestampValue();
+        $this->save(false);
+        return $this;
     }
 }

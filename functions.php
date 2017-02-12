@@ -1,5 +1,9 @@
 <?php
 
+
+// -------------------------------------------------------------
+// Application functions
+// -------------------------------------------------------------
 /**
  * Set env
  * @param array $env
@@ -80,6 +84,9 @@ function isDebugEnabled()
     return $result;
 }
 
+// -------------------------------------------------------------
+// Helper functions
+// -------------------------------------------------------------
 /**
  * Get url
  * @param array|string $url
@@ -100,15 +107,4 @@ function url($url = '', $scheme = false)
 function trans($message, $params = [])
 {
     return Yii::t('app', $message, $params);
-}
-
-/**
- * Get mailer
- * @return \app\components\Mailer
- */
-function mailer()
-{
-    /** @var \app\components\Mailer $mailer */
-    $mailer = Yii::$app->mailer;
-    return $mailer;
 }
