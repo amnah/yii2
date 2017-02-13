@@ -9,5 +9,12 @@ new Vue({
     el: '#app',
     components: {
         example: require('./components/example.vue')
+    },
+    methods: {
+        refresh() {
+            $.ajax('/site/captcha?refresh=1&_=' + new Date().getTime()).then(function(data) {
+                $('#contactform-verifycode-image').attr('src', data.url)
+            })
+        }
     }
 })
