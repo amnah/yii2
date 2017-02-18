@@ -145,7 +145,7 @@ function buildAll(bundle) {
 
         // -----------------------------------------------------
         // build compiled css files
-        const cssStream = gulp.src(`${assetPath}/sass/app.scss`)
+        const cssStream = gulp.src(`${assetPath}/sass/main.scss`)
             .pipe(sourcemaps.init())
             .pipe(sass().on('error', function(err) {
                 gutil.log(gutil.colors.red("Sass error:"), err.message);
