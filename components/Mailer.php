@@ -2,11 +2,27 @@
 
 namespace app\components;
 
+use Yii;
+use yii\base\DynamicModel;
 use app\models\PasswordReset;
 use app\models\User;
 
 class Mailer extends \yii\swiftmailer\Mailer
 {
+    /**
+     * Send contact email
+     * @param DynamicModel $contactForm
+     * @return bool
+     */
+    public function sendContactEmail($contactForm) {
+        return $this->compose()
+            ->setTo(Yii::$app->params['adminEmail'])
+            ->setFrom([$contactForm->email => $contactForm->name])
+            ->setSubject($contactForm->subject)
+            ->setTextBody($contactForm->body)
+            ->send();
+    }
+
     /**
      * Send confirmation email
      * @param User $user

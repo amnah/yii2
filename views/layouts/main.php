@@ -26,7 +26,7 @@ $min = !empty($min) ? '.min' : '';
 </head>
 <body>
 <?php $this->beginBody() ?>
-<div id="app">
+<div>
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
@@ -81,12 +81,20 @@ $min = !empty($min) ? '.min' : '';
         </div>
     </nav>
 
+    <!-- content -->
     <?= $content ?>
+    <!-- end content -->
 </div>
 
 <!-- Scripts -->
 <script src="/compiled/vendor<?= $min ?>.js"></script>
+<!--
 <script src="/compiled/compiled<?= $min ?>.js"></script>
+-->
+
+<?php if (isset($this->blocks['javascript'])): ?>
+    <?= $this->blocks['javascript'] ?>
+<?php endif; ?>
 
 <?php $this->endBody() ?>
 </body>

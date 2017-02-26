@@ -3,8 +3,9 @@
 namespace app\controllers;
 
 use Yii;
+use yii\base\DynamicModel;
 use yii\web\Controller;
-use app\models\ContactForm;
+use app\components\Mailer;
 
 class SiteController extends Controller
 {
@@ -41,12 +42,21 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+        $defaultAttributes = ['name' => '', 'email' => '', 'subject' => '', 'body' => '', 'verificationCode' => ''];
+        $model = new DynamicModel($defaultAttributes);
+        $model->addRule(['name', 'email', 'subject', 'body'], 'required')
+            ->addRule(['email'], 'email')
+            ->addRule(['verificationCode'], 'captcha');
 
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            /** @var Mailer $mailer */
+            $mailer = Yii::$app->mailer;
+            $mailer->sendContactEmail($model);
+
+            Yii::$app->session->setFlash('contactFormSubmitted');
             return $this->refresh();
         }
+
         return $this->render('contact', compact('model'));
     }
 
