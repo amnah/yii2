@@ -22,9 +22,11 @@ $min = !empty($min) ? '.min' : '';
 <div id="app">
     <!-- Navbar -->
     <navbar></navbar>
+    <!-- End Navbar -->
 
     <!-- Router-view -->
     <router-view></router-view>
+    <!-- End Router-view -->
 </div>
 
 <!-- Config -->

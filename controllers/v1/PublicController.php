@@ -28,9 +28,7 @@ class PublicController extends BaseController
     }
 
     /**
-     * Displays contact page.
-     *
-     * @return string
+     * Contact
      */
     public function actionContact()
     {
@@ -44,7 +42,7 @@ class PublicController extends BaseController
             /** @var Mailer $mailer */
             $mailer = Yii::$app->mailer;
             $mailer->sendContactEmail($model);
-            return ["success" => true, "model" => $model];
+            return ["success" => true];
         }
 
         return ["errors" => $model->errors, "model" => $model];

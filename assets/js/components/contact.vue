@@ -38,24 +38,24 @@
                                         <div class="form-group" :class="{'has-error': errors.name}">
                                             <label class="control-label" for="dynamicmodel-name">Name</label>
                                             <input type="text" id="dynamicmodel-name" class="form-control" autofocus required v-model.trim="form.name">
-                                            <p class="help-block help-block-error" v-if="errors.name">{{ errors.name[0] }}</p>
+                                            <p class="help-block help-block-error" v-if="errors.name"><strong>{{ errors.name[0] }}</strong></p>
                                         </div>
-                                        <div class="form-group field-dynamicmodel-email required" :class="{'has-error': errors.email}">
+                                        <div class="form-group" :class="{'has-error': errors.email}">
                                             <label class="control-label" for="dynamicmodel-email">Email</label>
                                             <input type="text" id="dynamicmodel-email" class="form-control" email required v-model.trim="form.email">
-                                            <p class="help-block help-block-error" v-if="errors.email">{{ errors.email[0] }}</p>
+                                            <p class="help-block help-block-error" v-if="errors.email"><strong>{{ errors.email[0] }}</strong></p>
                                         </div>
-                                        <div class="form-group field-dynamicmodel-subject required" :class="{'has-error': errors.subject}">
+                                        <div class="form-group" :class="{'has-error': errors.subject}">
                                             <label class="control-label" for="dynamicmodel-subject">Subject</label>
                                             <input type="text" id="dynamicmodel-subject" class="form-control" required v-model.trim="form.subject">
-                                            <p class="help-block help-block-error" v-if="errors.subject">{{ errors.subject[0] }}</p>
+                                            <p class="help-block help-block-error" v-if="errors.subject"><strong>{{ errors.subject[0] }}</strong></p>
                                         </div>
-                                        <div class="form-group field-dynamicmodel-body required" :class="{'has-error': errors.body}">
+                                        <div class="form-group" :class="{'has-error': errors.body}">
                                             <label class="control-label" for="dynamicmodel-body">Body</label>
                                             <textarea id="dynamicmodel-body" class="form-control" rows="6" required v-model.trim="form.body"></textarea>
-                                            <p class="help-block help-block-error" v-if="errors.body">{{ errors.body[0] }}</p>
+                                            <p class="help-block help-block-error" v-if="errors.body"><strong>{{ errors.body[0] }}</strong></p>
                                         </div>
-                                        <div class="form-group field-dynamicmodel-verificationcode" :class="{'has-error': errors.verificationCode}">
+                                        <div class="form-group" :class="{'has-error': errors.verificationCode}">
                                             <label class="control-label" for="dynamicmodel-verificationcode">Verification Code</label>
                                             <div class="row">
                                                 <div class="col-lg-3" @click="refreshCaptcha()">
@@ -65,10 +65,10 @@
                                                     <input type="text" id="dynamicmodel-verificationcode" class="form-control" required v-model.trim="form.verificationCode">
                                                 </div>
                                             </div>
-                                            <p class="help-block help-block-error" v-if="errors.verificationCode">{{ errors.verificationCode[0] }}</p>
+                                            <p class="help-block help-block-error" v-if="errors.verificationCode"><strong>{{ errors.verificationCode[0] }}</strong></p>
                                         </div>
                                         <div class="form-group">
-                                            <button type="submit" class="btn btn-primary" name="contact-button" :disabled="submitting">Submit</button>
+                                            <button type="submit" class="btn btn-primary" :disabled="submitting">Submit</button>
                                         </div>
 
                                     </form>
@@ -116,7 +116,7 @@ export default {
             const vm = this
             reset(vm)
             vm.numSubmitted++
-            post('public/contact', {DynamicModel: this.form}).then(function(data) {
+            post('public/contact', {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)
 
                 // refresh captcha if user failed three times
