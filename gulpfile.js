@@ -19,6 +19,8 @@ const assign = require('lodash.assign');
 const buffer = require('vinyl-buffer');
 const source = require('vinyl-source-stream');
 const watchify = require('watchify');
+const babelify = require('babelify');
+const vueify = require('vueify');
 
 const importTime = (Date.now() - importStart) /  1000;
 gutil.log(`Done importing (${importTime} seconds)`);
@@ -44,9 +46,12 @@ const customOpts = {
 };
 const browserifyOpts = assign({}, watchify.args, customOpts);
 const watchifyOpts = {poll: pollInterval, delay: pollInterval, ignoreWatch: ['**/node_modules/**', 'vendor/**', '**/*.php']};
+
+// add babel options to 'vueify' so we can use those features in .vue files
+// @link https://github.com/vuejs/vueify/issues/71#issuecomment-202013630
 const b = browserify(browserifyOpts)
-    .transform("babelify", {presets: ['latest']})
-    .transform("vueify");
+    .transform(babelify)
+    .transform(vueify);
 
 // Make sure to have the NODE_ENV environment variable set to "production" when building for production!
 // This strips away unnecessary code (e.g. hot-reload) for smaller bundle size.
@@ -148,7 +153,7 @@ function buildAll(bundle) {
         const cssStream = gulp.src(`${assetPath}/sass/main.scss`)
             .pipe(sourcemaps.init())
             .pipe(sass().on('error', function(err) {
-                gutil.log(gutil.colors.red("Sass error:"), err.message);
+                gutil.log(gutil.colors.red('Sass error:'), err.message);
             }));
         cssStream
             .pipe(concat(`compiled.css`))
