@@ -1,20 +1,19 @@
 
-/**
- * Create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+import store from './store.js'
+import router from './router.js'
+import {setConfig} from './functions.js'
+
+setConfig(window.AppConfig)
+delete window.AppConfig
+
+//store.dispatch('restoreFromStorage')
+//store.dispatch('checkAuth')
 
 new Vue({
     el: '#app',
+    store,
+    router,
     components: {
-        example: require('./components/example.vue')
-    },
-    methods: {
-        refresh() {
-            $.ajax('/site/captcha?refresh=1&_=' + new Date().getTime()).then(function(data) {
-                $('#contactform-verifycode-image').attr('src', data.url)
-            })
-        }
+        navbar: require('./components/navbar.vue')
     }
 })

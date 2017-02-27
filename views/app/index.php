@@ -1,0 +1,44 @@
+<?php
+
+/** @var \yii\web\View $this */
+
+$min = !empty($min) ? '.min' : '';
+
+?>
+<!DOCTYPE html>
+<html lang="<?= Yii::$app->language ?>">
+<head>
+    <meta charset="<?= Yii::$app->charset ?>">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>My Company</title>
+
+    <link href="/compiled/vendor<?= $min ?>.css" rel="stylesheet">
+    <link href="/compiled/compiled<?= $min ?>.css" rel="stylesheet">
+</head>
+<body>
+<?php $this->beginBody() ?>
+<div id="app">
+    <!-- Navbar -->
+    <navbar></navbar>
+
+    <!-- Router-view -->
+    <router-view></router-view>
+</div>
+
+<!-- Config -->
+<script type="text/javascript">
+    window.AppConfig = {
+        apiUrl: '/v1/',
+        csrf: '<?= Yii::$app->request->csrfToken ?>'
+    };
+</script>
+
+<!-- Scripts -->
+<script src="/compiled/vendor<?= $min ?>.js"></script>
+<script src="/compiled/compiled<?= $min ?>.js"></script>
+
+<?php $this->endBody() ?>
+</body>
+</html>

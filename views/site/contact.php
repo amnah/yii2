@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model yii\base\DynamicModel*/
+/* @var $success bool*/
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -18,7 +19,7 @@ $this->title = 'Contact';
                 <div class="panel-heading"><?= Html::encode($this->title) ?></div>
 
                 <div class="panel-body">
-                    <?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
+                    <?php if (isset($success)): ?>
 
                         <div class="alert alert-success">
                             Thank you for contacting us. We will respond to you as soon as possible.
