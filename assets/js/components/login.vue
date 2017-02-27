@@ -1,53 +1,55 @@
 
 <template>
-    <div>
-        <h1>Login</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Login</div>
+                    <div class="panel-body">
 
-        <p>Please fill out the following fields to login:</p>
+                        <div class="alert alert-info" v-if="loginUrl">
+                            After logging in, you will be redirected to <strong>{{ loginUrl }}</strong>
+                        </div>
 
-        <p v-if="loginUrl">After logging in, you will be redirected to <strong>{{ loginUrl }}</strong></p>
+                        <form id="login-form" class="form-horizontal" role="form" @submit.prevent="submit">
+                            <div class="form-group" :class="{'has-error': errors.email}">
+                                <label class="col-md-4 control-label" for="dynamicmodel-email">Email</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="dynamicmodel-email" class="form-control" autofocus required v-model.trim="form.email">
+                                    <span class="help-block" v-if="errors.email"><strong>{{ errors.email[0] }}</strong></span>
+                                </div>
+                            </div>
 
-        <form id="login-form" class="form-horizontal" role="form" @submit.prevent="submit">
+                            <div class="form-group" :class="{'has-error': errors.password}">
+                                <label class="col-md-4 control-label" for="dynamicmodel-password">Password</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="dynamicmodel-password" class="form-control" required v-model.trim="form.password">
+                                    <span class="help-block" v-if="errors.password"><strong>{{ errors.password[0] }}</strong></span>
+                                </div>
+                            </div>
 
-            <div class="form-group" v-bind:class="{'has-error': errors.email}">
-                <label class="col-lg-1 control-label" for="login-form-email">Email</label>
-                <div class="col-lg-3">
-                    <input type="text" id="login-form-email" class="form-control" v-model.trim="form.email">
-                </div>
-                <div class="col-lg-8">
-                    <p class="help-block help-block-error" v-if="errors.email">{{ errors.email[0] }}</p>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="dynamicmodel-rememberme" v-model="form.rememberMe" v-bind:true-value="1" v-bind:false-value="0">
+                                            Remember Me
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <button type="submit" class="btn btn-primary" :disabled="submitting">Login</button>
+                                    <router-link class="btn btn-link" to="/forgot">Forgot Your Password?</router-link>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="form-group" v-bind:class="{'has-error': errors.password}">
-                <label class="col-lg-1 control-label" for="login-form-password">Password</label>
-                <div class="col-lg-3">
-                    <input type="password" id="login-form-password" class="form-control" v-model.trim="form.password">
-                </div>
-                <div class="col-lg-8">
-                    <p class="help-block help-block-error" v-if="errors.password">{{ errors.password[0] }}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-offset-1 col-lg-3">
-                    <input type="checkbox" id="login-form-rememberme" v-model="form.rememberMe" v-bind:true-value="1" v-bind:false-value="0">
-                    <label for="login-form-rememberme">Remember Me</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-offset-1 col-lg-11">
-                    <button type="submit" class="btn btn-primary" :disabled="submitting">Login</button>
-                </div>
-                <div class="col-lg-offset-1 col-lg-11">
-                    <br/>
-                    <p><router-link to="/register">Register</router-link></p>
-                    <p><router-link to="/forgot">Forgot password?</router-link></p>
-                </div>
-            </div>
-
-        </form>
-
-        <div class="col-lg-offset-1" style="color:#999;">
-            You may login with <strong>neo/neo</strong>
         </div>
     </div>
 </template>
@@ -77,10 +79,10 @@ export default {
         submit: function(e) {
             const vm = this
             reset(vm)
-            post('auth/login', vm.form).then(function(data) {
+            post('auth/login', {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)
                 if (data.success) {
-                    vm.$store.dispatch('login', data.success)
+                    vm.$store.dispatch('login', data)
                     vm.$store.commit('loginUrl', null)
                     vm.$router.push(vm.loginUrl || '/')
                 }

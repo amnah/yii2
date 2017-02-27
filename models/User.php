@@ -76,6 +76,14 @@ class User extends \app\components\BaseModel implements \yii\web\IdentityInterfa
     }
 
     /**
+     * @inheritdoc
+     */
+    public function fields()
+    {
+        return ["id", "email", "username"];
+    }
+
+    /**
      * @return \yii\db\ActiveQuery
      */
     public function getPasswordResets()

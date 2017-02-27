@@ -23,13 +23,13 @@ const getters = {
 // Mutations
 // --------------------------------------------------------
 const mutations = {
-    user (state, user) {
+    user(state, user) {
         state.user = user
     },
-    loginUrl (state, loginUrl) {
+    loginUrl(state, loginUrl) {
         state.loginUrl = loginUrl
     },
-    statusMsg (state, statusMsg) {
+    statusMsg(state, statusMsg) {
         state.statusMsg = statusMsg
     }
 }
@@ -38,10 +38,10 @@ const mutations = {
 // Actions
 // --------------------------------------------------------
 const actions = {
-    login (state, data) {
+    login(state, data) {
         doLogin(state, data)
     },
-    logout (state) {
+    logout(state) {
         doLogout(state)
     },
     checkAuth(state) {
@@ -50,14 +50,16 @@ const actions = {
         }
         get('auth/check-auth').then(function(data) {
             if (data.success) {
-                doLogin(state, data.success)
+                doLogin(state, data)
             } else {
                 doLogout(state)
             }
         });
     },
-    restoreFromStorage (state) {
-        state.commit('user', JSON.parse(localStorage.getItem('user')))
+    restoreFromStorage(state) {
+        try {
+            state.commit('user', JSON.parse(localStorage.getItem('user')))
+        } catch(e) {}
     }
 }
 

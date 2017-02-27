@@ -1,44 +1,97 @@
 <?php
 
-namespace app\controllers;
+namespace app\controllers\v1;
 
 use Yii;
 use yii\base\DynamicModel;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use app\components\BaseController;
 use app\components\Mailer;
-use app\controllers\v1\AuthController as BaseAuthController;
 use app\models\PasswordReset;
 use app\models\User;
 
-class AuthController extends BaseAuthController
+class AuthController extends BaseController
 {
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-        Yii::$app->response->format = 'html';
-    }
+    protected $checkAuth = false;
 
     /**
      * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Logout
      */
     public function actionLogout()
     {
-        parent::actionLogout();
-        return $this->goHome();
+        Yii::$app->user->logout();
+        return ['success' => true];
     }
 
     /**
-     * @inheritdoc
+     * Check auth status
+     */
+    public function actionCheckAuth()
+    {
+        /** @var User $user */
+        $user = Yii::$app->user->identity;
+        if ($user) {
+            return ["success" => true, "user" => $user];
+        }
+        return ["error" => "Not logged in"];
+    }
+
+    /**
+     * Login
      */
     public function actionLogin()
     {
-        $data = parent::actionLogin();
-        if (isset($data['success'])) {
-            return $this->goBack();
+        $defaultAttributes = ['email' => '', 'password' => '', 'rememberMe' => true];
+        $model = new DynamicModel($defaultAttributes);
+        $model->addRule(['email', 'password'], 'required')
+            ->addRule(['rememberMe'], 'boolean');
+
+        // find user, validate password, and check if user is confirmed
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $field = filter_var($model->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+            $user = User::findOne([$field => trim($model->email)]);
+            if (!$user || !$user->validatePassword($model->password)) {
+                $model->addError('email', trans('auth.loginFailed'));
+            } elseif ($user->confirmation) {
+                $model->addError('email', trans('auth.unconfirmed'));
+            } else {
+                return $this->performLogin($user, $model->rememberMe);
+            }
         }
-        return $this->render('login', $data);
+
+        return ['errors' => $model->errors, 'model' => $model];
+    }
+
+    /**
+     * Perform login
+     * @param User $user
+     * @param bool $rememberMe
+     * @return array
+     */
+    protected function performLogin($user, $rememberMe = true)
+    {
+        $duration = $rememberMe ? 2592000 : 0; // 30 days
+        Yii::$app->user->login($user, $duration);
+        return ['success' => true, 'user' => $user];
     }
 
     /**
