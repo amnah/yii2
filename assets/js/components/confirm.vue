@@ -1,16 +1,17 @@
 
 <template>
-    <div>
-        <div class="alert alert-success" v-if="success">
-            <p>Email [ {{ success }} ] confirmed</p>
-
-            <p v-if="isLoggedIn"><router-link to="/account">Go to my account</router-link></p>
-            <p v-if="isLoggedIn"><router-link to="/">Go home</router-link></p>
-            <p v-if="!isLoggedIn"><router-link to="/login">Log in here</router-link></p>
-        </div>
-
-        <div class="alert alert-danger" v-if="error">
-            {{ error }}
+    <div v-if="error">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">Confirm Email</div>
+                        <div class="panel-body">
+                            {{ error }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -21,12 +22,15 @@ import {get, reset, process} from '../api.js'
 export default {
     name: 'confirm',
     beforeCreate: function() {
-        setPageTitle('Confirm')
+        setPageTitle('Confirm Email')
         const vm = this
         get('auth/confirm', vm.$route.query).then(function(data) {
+            process(vm, data)
             if (data.success) {
                 vm.success = data.success
-                vm.$store.dispatch('checkAuth')
+                vm.$store.dispatch('login', data)
+                vm.$store.commit('statusMsg', 'Email confirmed')
+                vm.$router.push('/')
             }
         });
     },
@@ -34,7 +38,6 @@ export default {
         return {
             success: false,
             error: false,
-            isLoggedIn: this.$store.getters.isLoggedIn,
         }
     }
 }

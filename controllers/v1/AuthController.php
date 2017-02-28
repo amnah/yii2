@@ -96,34 +96,25 @@ class AuthController extends BaseController
 
     /**
      * Register
-     * @return string
      */
     public function actionRegister()
     {
         $user = new User;
         $user->setScenario(User::SCENARIO_REGISTER);
         if ($user->loadPostAndSave()) {
-
-            // log user in directly
-            //return $this->performLogin($user);
-
             // send confirmation email
             /** @var Mailer $mailer */
             $user->setConfirmationToken();
             $mailer = Yii::$app->mailer;
-            $mailer->sendConfirmationEmail($user);
-
-            return $this->render('registered', compact('user'));
+            $mailer->sendConfirmationEmail($user, Yii::$app->request->isAjax);
+            return ['success' => true, 'user' => $user];
         }
 
-        return $this->render('register', compact('user'));
+        return ['errors' => $user->errors, 'user' => $user];
     }
 
     /**
      * Confirm
-     * @param string $email
-     * @param string $confirmation
-     * @return string
      */
     public function actionConfirm($email, $confirmation)
     {
@@ -131,11 +122,10 @@ class AuthController extends BaseController
         $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
         if ($user) {
             $user->clearConfirmationToken();
-            Yii::$app->session->setFlash('status', trans('auth.confirmed'));
-            return $this->performLogin($user, true, '/');
+            return $this->performLogin($user, true);
         }
 
-        return $this->render('confirm');
+        return ['error' => 'Invalid token'];
     }
 
     /**

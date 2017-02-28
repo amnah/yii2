@@ -3,8 +3,7 @@
 /* @var $this \yii\web\View view component instance */
 /* @var $message \yii\mail\MessageInterface the message being composed */
 /* @var $user \app\models\User */
-
-$confirmUrl = url(['auth/confirm', 'email' => $user->email, 'confirmation' => $user->confirmation], true);
+/* @var $confirmUrl string */
 
 ?>
 <p>Hello <?= $user->email ?>.</p>

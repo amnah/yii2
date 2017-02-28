@@ -34,5 +34,8 @@ export default {
         'user',
         'statusMsg',
     ]),
+    destroyed: function() {
+        this.$store.commit('statusMsg', null)
+    }
 }
 </script>

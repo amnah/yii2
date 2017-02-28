@@ -47,41 +47,23 @@ class AuthController extends BaseAuthController
      */
     public function actionRegister()
     {
-        $user = new User;
-        $user->setScenario(User::SCENARIO_REGISTER);
-        if ($user->loadPostAndSave()) {
-
-            // log user in directly
-            //return $this->performLogin($user);
-
-            // send confirmation email
-            /** @var Mailer $mailer */
-            $user->setConfirmationToken();
-            $mailer = Yii::$app->mailer;
-            $mailer->sendConfirmationEmail($user);
-
-            return $this->render('registered', compact('user'));
+        $data = parent::actionRegister();
+        if (isset($data['success'])) {
+            return $this->render('registered', $data);
         }
-
-        return $this->render('register', compact('user'));
+        return $this->render('register', $data);
     }
 
     /**
-     * Confirm
-     * @param string $email
-     * @param string $confirmation
-     * @return string
+     * @inheritdoc
      */
     public function actionConfirm($email, $confirmation)
     {
-        // find and confirm user
-        $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
-        if ($user) {
-            $user->clearConfirmationToken();
+        $data = parent::actionConfirm($email, $confirmation);
+        if (isset($data['success'])) {
             Yii::$app->session->setFlash('status', trans('auth.confirmed'));
-            return $this->performLogin($user, true, '/');
+            return $this->goHome();
         }
-
         return $this->render('confirm');
     }
 

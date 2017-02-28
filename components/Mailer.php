@@ -26,11 +26,14 @@ class Mailer extends \yii\swiftmailer\Mailer
     /**
      * Send confirmation email
      * @param User $user
+     * @param bool $viaApi
      * @return bool
      */
-    public function sendConfirmationEmail($user)
+    public function sendConfirmationEmail($user, $viaApi = false)
     {
-        return $this->compose('auth/confirmEmail', ['user' => $user])
+        $baseUrl = $viaApi ? 'app#/confirm' : 'auth/confirm';
+        $confirmUrl = url([$baseUrl, 'email' => $user->email, 'confirmation' => $user->confirmation], true);
+        return $this->compose('auth/confirmEmail', compact('user', 'confirmUrl'))
             ->setTo($user->email)
             ->setSubject(trans('auth.confirmSubject'))
             ->send();
@@ -43,7 +46,7 @@ class Mailer extends \yii\swiftmailer\Mailer
      */
     public function sendResetEmail($passwordReset)
     {
-        return $this->compose('auth/resetPassword', ['passwordReset' => $passwordReset])
+        return $this->compose('auth/resetPassword', compact('passwordReset'))
             ->setTo($passwordReset->user->email)
             ->setSubject(trans('auth.resetSubject'))
             ->send();
