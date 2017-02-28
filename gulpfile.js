@@ -1,13 +1,13 @@
 
 'use strict';
 
-const importStart = Date.now()
+const importStart = Date.now();
 const gutil = require('gulp-util');
 gutil.log(`Importing packages ...`);
 
 const path = require('path');
 const browserify = require('browserify');
-const del = require('del');
+//const del = require('del');
 const gulp = require('gulp');
 const cleanCSS = require('gulp-clean-css');
 const concat = require('gulp-concat');
@@ -23,7 +23,7 @@ const babelify = require('babelify');
 const vueify = require('vueify');
 
 const importTime = (Date.now() - importStart) /  1000;
-gutil.log(`Done importing (${importTime} seconds)`);
+gutil.log(gutil.colors.cyan(`Imports`) + ` (${importTime} seconds)`);
 
 
 // -------------------------------------------------------------
@@ -47,7 +47,7 @@ const customOpts = {
 const browserifyOpts = assign({}, watchify.args, customOpts);
 const watchifyOpts = {poll: pollInterval, delay: pollInterval, ignoreWatch: ['**/node_modules/**', 'vendor/**', '**/*.php']};
 
-// add babel options to 'vueify' so we can use those features in .vue files
+// note: this uses the options set in .babelrc so we can use those features in .vue files
 // @link https://github.com/vuejs/vueify/issues/71#issuecomment-202013630
 const b = browserify(browserifyOpts)
     .transform(babelify)
@@ -64,6 +64,7 @@ process.env.NODE_ENV = 'production';
 // -------------------------------------------------------------
 
 // Build task
+let isWatch;
 let buildStart;
 gulp.task('default', ['build']);
 gulp.task('build', function() {
@@ -86,6 +87,7 @@ gulp.task('watch', ['build'], function() {
         changedFiles = [e.path];
         buildAll(b.bundle());
     });
+    isWatch = true;
 });
 
 // File change notification
@@ -109,7 +111,7 @@ b.on('log', function(msg) {
 function buildAll(bundle) {
 
     // clean files first
-    del([`${distPath}/*`]).then(function() {
+    //del([`${distPath}/*`]).then(function() {
 
         // -----------------------------------------------------
         // build compiled js files
@@ -117,18 +119,16 @@ function buildAll(bundle) {
             .on('error', function(err) {
                 gutil.log(gutil.colors.red('Browserify error:'), err.message);
             })
-            .on('end', function() {
-                if (changedFiles) {
-                    gutil.log(changedFiles);
-                } else if (buildStart) {
-                    const buildTime = (Date.now() - buildStart) / 1000;
-                    const totalTime = (Date.now() - importStart) / 1000;
-                    gutil.log(`Bundle time (${buildTime} seconds)`);
-                    gutil.log(`Total time  (${totalTime} seconds)`);
-                }
-            })
             .pipe(source('compiled.js'))
-            .pipe(buffer());
+            .pipe(buffer())
+            .on('end', function() {
+                if (isWatch) {
+                    gutil.log(changedFiles);
+                } else {
+                    const buildTime = (Date.now() - buildStart) / 1000;
+                    gutil.log(gutil.colors.cyan(`Bundle`) + `  (${buildTime} seconds)`);
+                }
+            });
         jsStream
             .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
             .pipe(sourcemaps.write('./'))
@@ -137,7 +137,16 @@ function buildAll(bundle) {
             .pipe(concat(`compiled.min.js`))
             .pipe(uglify())
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest(distPath));
+            .pipe(gulp.dest(distPath))
+            .on('end', function() {
+                if (!isWatch) {
+                    const buildTime = (Date.now() - buildStart) / 1000;
+                    const totalTime = (Date.now() - importStart) / 1000;
+                    gutil.log(gutil.colors.cyan(`Scripts`) + ` (${buildTime} seconds)`);
+                    gutil.log(gutil.colors.cyan(`------------------------------`));
+                    gutil.log(gutil.colors.cyan(`Total`) + `   (${totalTime} seconds)`);
+                }
+            });
 
         // -----------------------------------------------------
         // build vendor js files
@@ -163,7 +172,13 @@ function buildAll(bundle) {
             .pipe(concat(`compiled.min.css`))
             .pipe(cleanCSS(/*{compatibility: 'ie8'}*/))
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest(distPath));
+            .pipe(gulp.dest(distPath))
+            .on('end', function() {
+                if (!isWatch) {
+                    const buildTime = (Date.now() - buildStart) / 1000;
+                    gutil.log(gutil.colors.cyan(`Sass`) + `    (${buildTime} seconds)`);
+                }
+            });
 
         // -----------------------------------------------------
         // build vendor css files
@@ -179,5 +194,5 @@ function buildAll(bundle) {
         gulp.src(`${vendorPath}/**/*.map`)
             .pipe(flatten())
             .pipe(gulp.dest(distPath));
-    });
+    //});
 }
