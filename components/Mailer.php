@@ -42,11 +42,14 @@ class Mailer extends \yii\swiftmailer\Mailer
     /**
      * Send reset email
      * @param PasswordReset $passwordReset
+     * @param bool $viaApi
      * @return bool
      */
-    public function sendResetEmail($passwordReset)
+    public function sendResetEmail($passwordReset, $viaApi = false)
     {
-        return $this->compose('auth/resetPassword', compact('passwordReset'))
+        $baseUrl = $viaApi ? 'app#/reset' : 'auth/reset';
+        $resetUrl = url([$baseUrl, 'token' => $passwordReset->token], true);
+        return $this->compose('auth/resetPassword', compact('passwordReset', 'resetUrl'))
             ->setTo($passwordReset->user->email)
             ->setSubject(trans('auth.resetSubject'))
             ->send();

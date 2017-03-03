@@ -1,30 +1,40 @@
 
 <template>
-    <div>
-        <div class="alert alert-success" v-if="success">
-            <p>Please check your email for a reset password link</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Forgot Password</div>
+                    <div class="panel-body">
+
+                        <div class="alert alert-success" v-if="success">
+                            We have e-mailed your password reset link to <strong>{{ form.email }}</strong>
+                        </div>
+
+                        <div v-if="!success">
+                            <form id="forgot-form" class="form-horizontal" role="form" @submit.prevent="submit">
+                                <div class="form-group" :class="{'has-error': errors.email}">
+                                    <label class="col-md-4 control-label" for="dynamicmodel-email">Email</label>
+                                    <div class="col-md-6">
+                                        <input type="email" id="dynamicmodel-email" class="form-control" autofocus required v-model.trim="form.email">
+                                        <span class="help-block" v-if="errors.email"><strong>{{ errors.email[0] }}</strong></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <button type="submit" class="btn btn-primary" :disabled="submitting">Send Password Reset Link</button>
+                                        <router-link class="btn btn-link" to="/login">Login</router-link>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <form id="forgot-form" class="form-horizontal" role="form" v-if="!success" @submit.prevent="submit">
-
-            <h1>Forgot password</h1>
-            <p>We'll send you a link to reset your password</p>
-            <div class="form-group" v-bind:class="{'has-error': errors.email}">
-                <label class="col-lg-1 control-label" for="forgot-form-email">Email</label>
-                <div class="col-lg-4">
-                    <input type="text" id="forgot-form-email" class="form-control" v-model.trim="form.email">
-                </div>
-                <div class="col-lg-7">
-                    <p class="help-block help-block-error" v-if="errors.email">{{ errors.email[0] }}</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-offset-1 col-lg-11">
-                    <button type="submit" class="btn btn-primary" :disabled="submitting">Submit</button>
-                </div>
-            </div>
-
-        </form>
     </div>
 </template>
 
@@ -50,7 +60,7 @@ export default {
         submit: function(e) {
             const vm = this
             reset(vm)
-            post('auth/forgot', vm.form).then(function(data) {
+            post('auth/forgot', {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)
             });
         }

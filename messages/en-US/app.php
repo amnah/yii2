@@ -7,6 +7,7 @@ return [
     'auth.confirmSubject' => 'Confirm Email',
     'auth.confirmed' => 'Emailed confirmed',
     'auth.forgotFailed' => 'Email address not found',
+    'auth.invalidToken' => 'Invalid token',
     'auth.resetSubject' => 'Reset password',
     'auth.resetSuccess' => 'Password has been reset',
 ];

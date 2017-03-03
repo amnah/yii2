@@ -121,11 +121,11 @@ class AuthController extends BaseController
         // find and confirm user
         $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
         if ($user) {
-            $user->clearConfirmationToken();
+            //$user->clearConfirmationToken();
             return $this->performLogin($user, true);
         }
 
-        return ['error' => 'Invalid token'];
+        return ['error' => trans('auth.invalidToken')];
     }
 
     /**
@@ -140,7 +140,6 @@ class AuthController extends BaseController
             ->addRule(['email'], 'email');
 
         // find user and generate $passwordReset token
-        $user = null;
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = User::findOne(['email' => trim($model->email)]);
             if (!$user) {
@@ -149,11 +148,12 @@ class AuthController extends BaseController
                 /** @var Mailer $mailer */
                 $passwordReset = PasswordReset::setTokenForUser($user->id);
                 $mailer = Yii::$app->mailer;
-                $mailer->sendResetEmail($passwordReset);
+                $mailer->sendResetEmail($passwordReset, Yii::$app->request->isAjax);
+                return ['success' => true, 'model' => $model];
             }
         }
 
-        return $this->render('forgot', compact('model', 'user'));
+        return ['errors' => $model->errors, 'model' => $model];
     }
 
     /**
@@ -165,17 +165,17 @@ class AuthController extends BaseController
     {
         $passwordReset = PasswordReset::getByToken($token);
         if (!$passwordReset) {
-            return $this->render('reset');
+            return ['error' => trans('auth.invalidToken')];
         }
 
-        $passwordReset->user->clearPassword()->setScenario(User::SCENARIO_RESET);
-        if ($passwordReset->user->loadPostAndSave()) {
+        $user = $passwordReset->user;
+        $user->clearPassword()->setScenario(User::SCENARIO_RESET);
+        if ($user->loadPostAndSave()) {
             // consume $passwordReset and login
             $passwordReset->consume();
-            Yii::$app->session->setFlash('status', trans('auth.resetSuccess'));
-            return $this->performLogin($passwordReset->user);
+            return $this->performLogin($user);
         }
 
-        return $this->render('reset', compact('passwordReset'));
+        return ['errors' => $user->errors, 'user' => $user];
     }
 }

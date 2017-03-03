@@ -1,7 +1,8 @@
 <?php
 
 /** @var yii\web\View $this */
-/** @var app\models\PasswordReset $passwordReset */
+/** @var app\models\User $user */
+/** @var string $error */
 
 use yii\helpers\Html;
 
@@ -11,13 +12,13 @@ $this->title = 'Reset Password';
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel <?= empty($passwordReset) ? 'panel-danger' : 'panel-default' ?>">
+            <div class="panel <?= isset($error) ? 'panel-danger' : 'panel-default' ?>">
                 <div class="panel-heading"><?= Html::encode($this->title) ?></div>
                 <div class="panel-body">
 
-                    <?php if (empty($passwordReset)): ?>
+                    <?php if (isset($error)): ?>
 
-                        <p>Invalid token</p>
+                        <p><?= trans('auth.invalidToken') ?></p>
 
                     <?php else: ?>
 
@@ -25,9 +26,9 @@ $this->title = 'Reset Password';
 
                         <?php $field = 'email'; ?>
                         <div class="form-group">
-                            <?= Html::activeLabel($passwordReset->user, $field, ['class' => 'col-md-4 control-label']) ?>
+                            <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
                             <div class="col-md-6">
-                                <?= Html::activeTextInput($passwordReset->user, $field, [
+                                <?= Html::activeTextInput($user, $field, [
                                     'class' => 'form-control',
                                     'disabled' => true,
                                 ]); ?>
@@ -35,31 +36,31 @@ $this->title = 'Reset Password';
                         </div>
 
                         <?php $field = 'password'; ?>
-                        <div class="form-group <?= $passwordReset->user->hasErrors($field) ? 'has-error' : '' ?>">
-                            <?= Html::activeLabel($passwordReset->user, $field, ['class' => 'col-md-4 control-label']) ?>
+                        <div class="form-group <?= $user->hasErrors($field) ? 'has-error' : '' ?>">
+                            <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
                             <div class="col-md-6">
-                                <?= Html::activePasswordInput($passwordReset->user, $field, [
+                                <?= Html::activePasswordInput($user, $field, [
                                     'class' => 'form-control',
                                     'required' => true,
                                     'autofocus' => true,
                                 ]); ?>
                                 <span class="help-block">
-                                    <strong><?= Html::error($passwordReset->user, $field) ?></strong>
+                                    <strong><?= Html::error($user, $field) ?></strong>
                                 </span>
                             </div>
                         </div>
 
                         <?php $field = 'confirm_password'; ?>
-                        <div class="form-group <?= $passwordReset->user->hasErrors($field) ? 'has-error' : '' ?>">
-                            <?= Html::activeLabel($passwordReset->user, $field, ['class' => 'col-md-4 control-label']) ?>
+                        <div class="form-group <?= $user->hasErrors($field) ? 'has-error' : '' ?>">
+                            <?= Html::activeLabel($user, $field, ['class' => 'col-md-4 control-label']) ?>
                             <div class="col-md-6">
-                                <?= Html::activePasswordInput($passwordReset->user, $field, [
+                                <?= Html::activePasswordInput($user, $field, [
                                     'class' => 'form-control',
                                     'required' => true,
                                     'autofocus' => true,
                                 ]); ?>
                                 <span class="help-block">
-                                    <strong><?= Html::error($passwordReset->user, $field) ?></strong>
+                                    <strong><?= Html::error($user, $field) ?></strong>
                                 </span>
                             </div>
                         </div>

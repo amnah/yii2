@@ -2,7 +2,6 @@
 
 /** @var yii\web\View $this */
 /** @var yii\base\DynamicModel $model */
-/** @var app\models\User $user */
 
 use yii\helpers\Html;
 
@@ -16,10 +15,10 @@ $this->title = 'Forgot Password';
                 <div class="panel-heading"><?= Html::encode($this->title) ?></div>
                 <div class="panel-body">
 
-                    <?php if ($user): ?>
+                    <?php if (isset($success)): ?>
 
                         <div class="alert alert-success">
-                            We have e-mailed your password reset link to  <strong><?= $user->email ?></strong>
+                            We have e-mailed your password reset link to  <strong><?= $model->email ?></strong>
                         </div>
 
                     <?php else: ?>

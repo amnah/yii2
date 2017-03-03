@@ -68,53 +68,24 @@ class AuthController extends BaseAuthController
     }
 
     /**
-     * Forgot password
-     * @return string
+     * @inheritdoc
      */
     public function actionForgot()
     {
-        $defaultAttributes = ['email' => ''];
-        $model = new DynamicModel($defaultAttributes);
-        $model->addRule(['email'], 'required')
-            ->addRule(['email'], 'email');
-
-        // find user and generate $passwordReset token
-        $user = null;
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user = User::findOne(['email' => trim($model->email)]);
-            if (!$user) {
-                $model->addError('email', trans('auth.forgotFailed'));
-            } else {
-                /** @var Mailer $mailer */
-                $passwordReset = PasswordReset::setTokenForUser($user->id);
-                $mailer = Yii::$app->mailer;
-                $mailer->sendResetEmail($passwordReset);
-            }
-        }
-
-        return $this->render('forgot', compact('model', 'user'));
+        $data = parent::actionForgot();
+        return $this->render('forgot', $data);
     }
 
     /**
-     * Reset password
-     * @param string $token
-     * @return string
+     * @inheritdoc
      */
     public function actionReset($token)
     {
-        $passwordReset = PasswordReset::getByToken($token);
-        if (!$passwordReset) {
-            return $this->render('reset');
-        }
-
-        $passwordReset->user->clearPassword()->setScenario(User::SCENARIO_RESET);
-        if ($passwordReset->user->loadPostAndSave()) {
-            // consume $passwordReset and login
-            $passwordReset->consume();
+        $data = parent::actionReset($token);
+        if (isset($data['success'])) {
             Yii::$app->session->setFlash('status', trans('auth.resetSuccess'));
-            return $this->performLogin($passwordReset->user);
+            return $this->goHome();
         }
-
-        return $this->render('reset', compact('passwordReset'));
+        return $this->render('reset', $data);
     }
 }
