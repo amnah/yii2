@@ -88,10 +88,8 @@ import {setPageTitle} from '../functions.js'
 import {get, post, reset, process} from '../api.js'
 export default {
     name: 'contact',
-    beforeCreate: function() {
-        setPageTitle('Contact')
-    },
     created: function() {
+        setPageTitle('Contact')
         this.refreshCaptcha()
     },
     data: function() {

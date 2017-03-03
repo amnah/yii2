@@ -24,7 +24,7 @@
                                 <div class="form-group" :class="{'has-error': errors.username}">
                                     <label class="col-md-4 control-label" for="dynamicmodel-username">Username</label>
                                     <div class="col-md-6">
-                                        <input type="text" id="dynamicmodel-username" class="form-control" autofocus required v-model.trim="form.username">
+                                        <input type="text" id="dynamicmodel-username" class="form-control" required v-model.trim="form.username">
                                         <span class="help-block" v-if="errors.username"><strong>{{ errors.username[0] }}</strong></span>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@ import {setPageTitle} from '../functions.js'
 import {post, reset, process} from '../api.js'
 export default {
     name: 'register',
-    beforeCreate: function() {
+    created: function() {
         setPageTitle('Register')
     },
     data: function() {

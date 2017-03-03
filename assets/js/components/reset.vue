@@ -55,16 +55,14 @@ import {setPageTitle} from '../functions.js'
 import {get, post, reset, process} from '../api.js'
 export default {
     name: 'reset',
-    beforeCreate: function() {
+    created: function() {
         setPageTitle('Reset Password')
         const vm = this
-        const token = vm.$route.query.token || ''
-        get(`auth/reset?token=${token}`).then(function(data) {
+        get(vm.formUrl).then(function(data) {
             if (data.error) {
                 vm.error = data.error
             } else if (data.user) {
                 vm.form = data.user
-                vm.token = token
             }
         });
     },
@@ -73,7 +71,7 @@ export default {
             submitting: false,
             errors: {},
             error: null,
-            token: null,
+            formUrl: `auth/reset?token=${this.$route.query.token}`,
             form: {
                 email: '',
                 password: '',
@@ -85,7 +83,7 @@ export default {
         submit: function(e) {
             const vm = this
             reset(vm)
-            post(`auth/reset?token=${vm.token}`, {User: vm.form}).then(function(data) {
+            post(vm.formUrl, {User: vm.form}).then(function(data) {
                 process(vm, data)
                 if (data.success) {
                     vm.$store.dispatch('login', data)

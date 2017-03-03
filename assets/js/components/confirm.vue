@@ -7,7 +7,7 @@
                     <div class="panel panel-danger">
                         <div class="panel-heading">Confirm Email</div>
                         <div class="panel-body">
-                            {{ error }}
+                            <p>{{ error }}</p>
                         </div>
                     </div>
                 </div>
@@ -18,16 +18,15 @@
 
 <script>
 import {setPageTitle} from '../functions.js'
-import {get, reset, process} from '../api.js'
+import {get, process} from '../api.js'
 export default {
     name: 'confirm',
-    beforeCreate: function() {
+    created: function() {
         setPageTitle('Confirm Email')
         const vm = this
         get('auth/confirm', vm.$route.query).then(function(data) {
             process(vm, data)
             if (data.success) {
-                vm.success = data.success
                 vm.$store.dispatch('login', data)
                 vm.$store.commit('statusMsg', 'Email confirmed')
                 vm.$router.push('/')
@@ -36,7 +35,6 @@ export default {
     },
     data: function() {
         return {
-            success: false,
             error: false,
         }
     }

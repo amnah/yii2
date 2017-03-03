@@ -19,7 +19,7 @@
 import {setPageTitle} from '../functions.js'
 export default {
     name: 'about',
-    beforeCreate: function() {
+    created: function() {
         setPageTitle('About')
     }
 }

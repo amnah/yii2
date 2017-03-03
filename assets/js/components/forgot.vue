@@ -43,7 +43,7 @@ import {setPageTitle} from '../functions.js'
 import {post, reset, process} from '../api.js'
 export default {
     name: 'forgot',
-    beforeCreate: function() {
+    created: function() {
         setPageTitle('Forgot Password')
     },
     data: function() {

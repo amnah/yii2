@@ -26,8 +26,8 @@
 <script>
 import {setPageTitle} from '../functions.js'
 export default {
-    name: 'home',
-    beforeCreate: function() {
+    name: 'index',
+    created: function() {
         setPageTitle()
     },
     computed: Vuex.mapGetters([
