@@ -108,3 +108,32 @@ function trans($message, $params = [])
 {
     return Yii::t('app', $message, $params);
 }
+
+/**
+ * Compute asset url based on manifest file
+ * @param string $file
+ * @return string
+ */
+function assetUrl($file) {
+
+    // use regular file in development
+    if (YII_ENV_DEV) {
+        return $file;
+    }
+
+    // get manifest data
+    static $manifest = false;
+    if ($manifest === false) {
+        $manifest = null;
+        $manifestFile = Yii::getAlias('@app/web') . '/compiled/manifest.json';
+        if (file_exists($manifestFile)) {
+            $manifest = json_decode(file_get_contents($manifestFile), true);
+        }
+    }
+
+    // use min file in production
+    $min = YII_ENV_PROD ? '.min.' : '.';
+    $pathInfo = pathinfo($file);
+    $file = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . $min . $pathInfo['extension'];
+    return isset($manifest[$file]) ? $manifest[$file] : $file;
+}

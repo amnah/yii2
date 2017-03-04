@@ -2,8 +2,6 @@
 
 /** @var \yii\web\View $this */
 
-$min = !empty($min) ? '.min' : '';
-
 ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -14,8 +12,8 @@ $min = !empty($min) ? '.min' : '';
 
     <title>My Company</title>
 
-    <link href="/compiled/vendor<?= $min ?>.css" rel="stylesheet">
-    <link href="/compiled/compiled<?= $min ?>.css" rel="stylesheet">
+    <link href="<?= assetUrl("/compiled/vendor.css") ?>" rel="stylesheet">
+    <link href="<?= assetUrl("/compiled/compiled.css") ?>" rel="stylesheet">
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -38,8 +36,8 @@ $min = !empty($min) ? '.min' : '';
 </script>
 
 <!-- Scripts -->
-<script src="/compiled/vendor<?= $min ?>.js"></script>
-<script src="/compiled/compiled<?= $min ?>.js"></script>
+<script src="<?= assetUrl("/compiled/vendor.js") ?>"></script>
+<script src="<?= assetUrl("/compiled/compiled.js") ?>"></script>
 
 <?php $this->endBody() ?>
 </body>
