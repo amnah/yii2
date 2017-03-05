@@ -35,7 +35,7 @@ class BuildController extends Controller
             $hash = substr($hash, 0, $this->hashLength);
             $newFile = preg_replace('/(.*)(\.min)?(\.css|\.js)/U', "$1.$hash$2$3", $file);
 
-            // determine if we need to copy or the file or simply keep it
+            // determine if we need to copy the file or keep it as-is
             if (!in_array($newFile, $files)) {
                 $newFiles[$file] = $newFile;
             } else {
@@ -50,18 +50,6 @@ class BuildController extends Controller
             shell_exec($cmd);
         }
 
-        // delete files that aren't needed anymore
-        $deleteFiles = array_diff($deleteFiles, $keepFiles);
-        if ($deleteFiles) {
-            foreach ($deleteFiles as $k => $file) {
-                $deleteFiles[$k] = "'{$file}'";
-            }
-            $deleteFiles = implode(" ", $deleteFiles);
-            $cmd = "rm -f $deleteFiles";
-            $this->stdout("Removing files [ $cmd ]\n", Console::FG_YELLOW);
-            shell_exec($cmd);
-        }
-
         // write manifest file
         $manifestData = [];
         $assetFiles = array_merge($newFiles, $keepFiles);
@@ -73,6 +61,18 @@ class BuildController extends Controller
         $manifestFile = "$webPath/compiled/manifest.json";
         $this->stdout("Writing manifest file\n", Console::FG_YELLOW);
         file_put_contents($manifestFile, json_encode($manifestData, JSON_PRETTY_PRINT));
+
+        // delete files that aren't needed anymore
+        $deleteFiles = array_diff($deleteFiles, $keepFiles);
+        if ($deleteFiles) {
+            foreach ($deleteFiles as $k => $file) {
+                $deleteFiles[$k] = "'{$file}'";
+            }
+            $deleteFiles = implode(" ", $deleteFiles);
+            $cmd = "rm -f $deleteFiles";
+            $this->stdout("Removing files [ $cmd ]\n", Console::FG_YELLOW);
+            shell_exec($cmd);
+        }
     }
 
     public function actionClear()
