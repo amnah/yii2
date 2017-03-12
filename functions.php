@@ -5,29 +5,6 @@
 // Application functions
 // -------------------------------------------------------------
 /**
- * Set env
- * @param array $env
- */
-function setEnv($env) {
-    foreach ($env as $key => $value) {
-        // skip if already set
-        if (getenv($key) !== false) {
-            continue;
-        }
-
-        // set bool/null explicitly, otherwise they get computed as 0 or 1
-        if ($value === true) {
-            $value = "true";
-        } elseif ($value === false) {
-            $value = "false";
-        } elseif ($value === null) {
-            $value = "null";
-        }
-        putenv("$key=$value");
-    }
-}
-
-/**
  * Get env
  * @param string $key
  * @param mixed $default
@@ -35,22 +12,11 @@ function setEnv($env) {
  */
 function env($key, $default = null)
 {
-    // check if $key is not set
-    $value = getenv($key);
-    if ($value === false) {
-        return $default;
+    static $env;
+    if ($env === null) {
+        $env = require_once __DIR__ . '/env.php';
     }
-
-    // return bool/null/value
-    if ($value == "true") {
-        return true;
-    } elseif ($value == "false") {
-        return false;
-    } elseif ($value == "null") {
-        return null;
-    } else {
-        return $value;
-    }
+    return array_key_exists($key, $env) ? $env[$key] : $default;
 }
 
 /**

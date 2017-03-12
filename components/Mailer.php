@@ -4,10 +4,11 @@ namespace app\components;
 
 use Yii;
 use yii\base\DynamicModel;
+use yii\swiftmailer\Mailer as BaseMailer;
 use app\models\PasswordReset;
 use app\models\User;
 
-class Mailer extends \yii\swiftmailer\Mailer
+class Mailer extends BaseMailer
 {
     /**
      * Send contact email

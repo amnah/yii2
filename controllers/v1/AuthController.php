@@ -121,7 +121,7 @@ class AuthController extends BaseController
         // find and confirm user
         $user = User::findOne(['email' => $email, 'confirmation' => $confirmation]);
         if ($user) {
-            //$user->clearConfirmationToken();
+            $user->clearConfirmationToken();
             return $this->performLogin($user, true);
         }
 

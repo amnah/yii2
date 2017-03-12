@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\web\IdentityInterface;
+use app\components\BaseModel;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -18,7 +20,7 @@ use Yii;
  *
  * @property PasswordReset[] $passwordResets
  */
-class User extends \app\components\BaseModel implements \yii\web\IdentityInterface
+class User extends BaseModel implements IdentityInterface
 {
     const SCENARIO_REGISTER = 'register';
     const SCENARIO_RESET = 'reset';

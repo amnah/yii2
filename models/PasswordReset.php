@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\components\BaseModel;
 
 /**
  * This is the model class for table "{{%password_reset}}".
@@ -15,7 +16,7 @@ use Yii;
  *
  * @property User $user
  */
-class PasswordReset extends \app\components\BaseModel
+class PasswordReset extends BaseModel
 {
     /**
      * @var int Number of minutes before token expires
