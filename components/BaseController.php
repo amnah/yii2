@@ -61,14 +61,14 @@ class BaseController extends Controller
             // cors filter
             /*
             'corsFilter' => [
-                "class" => Cors::className(),
+                'class' => 'yii\filters\Cors',
             ],
             */
 
             // rate limiter
             /*
             'rateLimiter' => [
-                'class' => RateLimiter::className(),
+                'class' => 'yii\filters\Cors',
             ],
             */
         ];
