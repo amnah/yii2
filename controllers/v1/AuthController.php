@@ -23,14 +23,14 @@ class AuthController extends BaseController
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::className(),
+            'actions' => [
+                'logout' => ['post'],
             ],
         ];
+        return $behaviors;
     }
 
     /**
