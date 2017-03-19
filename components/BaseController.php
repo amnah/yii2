@@ -68,7 +68,7 @@ class BaseController extends Controller
             // rate limiter
             /*
             'rateLimiter' => [
-                'class' => 'yii\filters\Cors',
+                'class' => 'yii\filters\RateLimiter',
             ],
             */
         ];
