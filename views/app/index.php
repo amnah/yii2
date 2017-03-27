@@ -2,6 +2,10 @@
 
 /** @var \yii\web\View $this */
 
+$user = 'null'; // set as string for passing into javascript
+if (Yii::$app->user->id) {
+    $user = json_encode(Yii::$app->user->identity->toArray());
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -31,7 +35,8 @@
 <script type="text/javascript">
     window.AppConfig = {
         apiUrl: '/v1/',
-        csrf: '<?= Yii::$app->request->csrfToken ?>'
+        csrf: '<?= Yii::$app->request->csrfToken ?>',
+        user: <?= $user ?>
     };
 </script>
 

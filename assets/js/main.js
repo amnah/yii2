@@ -3,10 +3,15 @@ import store from './store.js'
 import router from './router.js'
 import {setConfig} from './functions.js'
 
-setConfig(window.AppConfig)
+// set AppConfig
+// (first we need to transfer AppConfig.user to the store)
+const appConfig = window.AppConfig
 delete window.AppConfig
-
-store.dispatch('checkAuth')
+if (appConfig.user) {
+    store.commit('user', appConfig.user)
+    delete appConfig.user
+}
+setConfig(appConfig)
 
 new Vue({
     el: '#app',
