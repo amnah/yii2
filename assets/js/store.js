@@ -2,7 +2,7 @@
 import {get, post} from './api.js'
 
 // --------------------------------------------------------
-// Root state
+// State
 // --------------------------------------------------------
 const state = {
     user: null,
@@ -14,9 +14,7 @@ const state = {
 // Getters
 // --------------------------------------------------------
 const getters = {
-    user: state => state.user,
-    loginUrl: state => state.loginUrl,
-    statusMsg: state => state.statusMsg,
+    //user: state => state.user,
 }
 
 // --------------------------------------------------------
@@ -25,6 +23,7 @@ const getters = {
 const mutations = {
     user(state, user) {
         state.user = user
+        localStorage.setItem('user', JSON.stringify(user))
     },
     loginUrl(state, loginUrl) {
         state.loginUrl = loginUrl
@@ -38,43 +37,30 @@ const mutations = {
 // Actions
 // --------------------------------------------------------
 const actions = {
-    login(state, data) {
-        doLogin(state, data)
+    logout(store) {
+        store.commit('user', null)
+        localStorage.removeItem('user')
+        return post('auth/logout')
     },
-    logout(state) {
-        doLogout(state)
-    },
-    checkAuth(state) {
-        if (!state.getters.user) {
+    checkAuth(store) {
+        // attempt to restore user from localStorage
+        // note: we commit the user here to make it appear instantaneous
+        try {
+            store.commit('user', JSON.parse(localStorage.getItem('user')))
+        } catch(e) {}
+        if (!store.state.user) {
             return
         }
+
+        // call backend to get fresh data
         get('auth/check-auth').then(function(data) {
             if (data.success) {
-                doLogin(state, data)
+                store.commit('user', data.user)
             } else {
-                doLogout(state)
+                store.commit('user', null)
             }
-        });
+        })
     },
-    restoreFromStorage(state) {
-        try {
-            state.commit('user', JSON.parse(localStorage.getItem('user')))
-        } catch(e) {}
-    }
-}
-
-// --------------------------------------------------------
-// Helper functions for actions
-// --------------------------------------------------------
-function doLogin(state, data) {
-    state.commit('user', data.user)
-    localStorage.setItem('user', JSON.stringify(data.user))
-}
-
-function doLogout(state) {
-    post('auth/logout')
-    state.commit('user', null)
-    localStorage.removeItem('user')
 }
 
 // --------------------------------------------------------

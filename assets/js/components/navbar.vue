@@ -51,7 +51,7 @@
 <script>
 export default {
     name: 'navbar',
-    computed: Vuex.mapGetters([
+    computed: Vuex.mapState([
         'user',
     ]),
     methods: {

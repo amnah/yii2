@@ -30,12 +30,16 @@ export default {
     created: function() {
         setPageTitle()
     },
-    computed: Vuex.mapGetters([
+    computed: Vuex.mapState([
         'user',
         'statusMsg',
     ]),
     destroyed: function() {
-        this.$store.commit('statusMsg', null)
+        // check for statusMsg before clearing it out
+        // (this prevents an unnecessary state update)
+        if (this.$store.state.statusMsg) {
+            this.$store.commit('statusMsg', null)
+        }
     }
 }
 </script>

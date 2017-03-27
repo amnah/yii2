@@ -67,7 +67,7 @@ export default {
             success: false,
             submitting: false,
             errors: {},
-            loginUrl: this.$store.getters.loginUrl,
+            loginUrl: this.$store.state.loginUrl,
             form: {
                 email: '',
                 password: '',
@@ -82,8 +82,10 @@ export default {
             post('auth/login', {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)
                 if (data.success) {
-                    vm.$store.dispatch('login', data)
-                    vm.$store.commit('loginUrl', null)
+                    vm.$store.commit('user', data.user)
+                    if (vm.$store.state.loginUrl) {
+                        vm.$store.commit('loginUrl', null)
+                    }
                     vm.$router.push(vm.loginUrl || '/')
                 }
             });

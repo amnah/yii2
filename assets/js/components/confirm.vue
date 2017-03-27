@@ -27,7 +27,7 @@ export default {
         get('auth/confirm', vm.$route.query).then(function(data) {
             process(vm, data)
             if (data.success) {
-                vm.$store.dispatch('login', data)
+                vm.$store.commit('user', data.user)
                 vm.$store.commit('statusMsg', 'Email confirmed')
                 vm.$router.push('/')
             }

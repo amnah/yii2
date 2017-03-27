@@ -93,7 +93,7 @@ export default {
         this.refreshCaptcha()
     },
     data: function() {
-        const user = this.$store.getters.user
+        const user = this.$store.state.user
         return {
             success: false,
             submitting: false,

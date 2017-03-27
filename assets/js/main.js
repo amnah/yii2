@@ -6,7 +6,6 @@ import {setConfig} from './functions.js'
 setConfig(window.AppConfig)
 delete window.AppConfig
 
-store.dispatch('restoreFromStorage')
 store.dispatch('checkAuth')
 
 new Vue({

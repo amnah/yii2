@@ -86,7 +86,7 @@ export default {
             post(vm.formUrl, {User: vm.form}).then(function(data) {
                 process(vm, data)
                 if (data.success) {
-                    vm.$store.dispatch('login', data)
+                    vm.$store.commit('user', data.user)
                     vm.$store.commit('statusMsg', 'Password has been reset')
                     vm.$router.push('/')
                 }
