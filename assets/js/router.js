@@ -13,6 +13,7 @@ export default new VueRouter({
         { path: '/confirm', component: require('./components/confirm.vue') },
         { path: '/forgot', component: require('./components/forgot.vue') },
         { path: '/reset', component: require('./components/reset.vue') },
+        { path: '/profile', component: require('./components/profile.vue') },
     ]
 })
 

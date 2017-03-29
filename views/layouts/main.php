@@ -41,7 +41,7 @@ $min = !empty($min) ? '.min' : '';
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="<?= url('/') ?>">
-                    My company
+                    My Company
                 </a>
             </div>
 
@@ -60,21 +60,17 @@ $min = !empty($min) ? '.min' : '';
                         <li><a href="<?= url('/auth/login') ?>">Login</a></li>
                         <li><a href="<?= url('/auth/register') ?>">Register</a></li>
                     <?php else: ?>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <?= $user->username ?> <span class="caret"></span>
+
+                        <li><a href="<?= url('/user/profile') ?>">Profile</a></li>
+                        <li>
+                            <a href="<?= url('/logout') ?>" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout (<?= $user->username ?>)
                             </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="<?= url('/logout') ?>" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-                                    <form id="logout-form" action="<?= url('/auth/logout') ?>" method="POST" style="display: none;">
-                                        <input type="hidden" name="<?= $request->csrfParam ?>" value="<?= $request->csrfToken ?>">
-                                    </form>
-                                </li>
-                            </ul>
+                            <form id="logout-form" action="<?= url('/auth/logout') ?>" method="POST" style="display: none;">
+                                <input type="hidden" name="<?= $request->csrfParam ?>" value="<?= $request->csrfToken ?>">
+                            </form>
                         </li>
+
                     <?php endif; ?>
                 </ul>
             </div>

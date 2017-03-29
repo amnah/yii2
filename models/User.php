@@ -24,6 +24,7 @@ class User extends BaseModel implements IdentityInterface
 {
     const SCENARIO_REGISTER = 'register';
     const SCENARIO_RESET = 'reset';
+    const SCENARIO_PROFILE = 'profile';
 
     /**
      * @var string
@@ -38,6 +39,7 @@ class User extends BaseModel implements IdentityInterface
         return [
             static::SCENARIO_REGISTER => ['email', 'username', 'password', 'confirm_password'],
             static::SCENARIO_RESET => ['password', 'confirm_password'],
+            static::SCENARIO_PROFILE=> ['username'],
         ];
     }
 

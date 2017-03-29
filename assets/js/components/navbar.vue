@@ -30,18 +30,8 @@
                     <router-link v-if="!user" tag="li" to="/login" @click.native="collapse"><a>Login</a></router-link>
                     <router-link v-if="!user" tag="li" to="/register" @click.native="collapse"><a>Register</a></router-link>
 
-                    <li v-if="user" class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ user.username }} <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a role="button" @click="logout">
-                                    Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    <router-link v-if="user" tag="li" to="/profile" @click.native="collapse"><a>Profile</a></router-link>
+                    <router-link v-if="user" tag="li" to="/logout" @click.native="logout"><a>Logout ({{ user.username }})</a></router-link>
                 </ul>
             </div>
         </div>
