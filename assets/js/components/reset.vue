@@ -30,7 +30,7 @@
                                     <label class="col-md-4 control-label" for="user-confirm_password">Confirm Password</label>
                                     <div class="col-md-6">
                                         <input type="password" id="user-confirm_password" class="form-control" required v-model.trim="form.confirm_password">
-                                        <span class="help-block" v-if="errors.password"><strong>{{ errors.password[0] }}</strong></span>
+                                        <span class="help-block" v-if="errors.confirm_password"><strong>{{ errors.confirm_password[0] }}</strong></span>
                                     </div>
                                 </div>
 
