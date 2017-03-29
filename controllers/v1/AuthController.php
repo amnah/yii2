@@ -4,7 +4,6 @@ namespace app\controllers\v1;
 
 use Yii;
 use yii\base\DynamicModel;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use app\components\BaseController;
 use app\components\Mailer;

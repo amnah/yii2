@@ -14,15 +14,22 @@ class BaseController extends Controller
     protected $checkAuth = true;
 
     /**
+     * @var string Response format
+     */
+    protected $responseFormat = 'json';
+
+    /**
      * @inheritdoc
      */
     public function init()
     {
-        // set json output and use "pretty" output in debug mode
-        Yii::$app->response->format = 'json';
+        // set response format
+        Yii::$app->response->format = $this->responseFormat;
+
+        // set json pretty print in debug mode
         Yii::$app->response->formatters['json'] = [
             'class' => 'yii\web\JsonResponseFormatter',
-            'prettyPrint' => YII_DEBUG, // use "pretty" output in debug mode
+            'prettyPrint' => YII_DEBUG,
         ];
 
         // check auth

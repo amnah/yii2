@@ -3,22 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use yii\base\DynamicModel;
-use app\components\Mailer;
 use app\controllers\v1\AuthController as BaseAuthController;
-use app\models\PasswordReset;
-use app\models\User;
 
 class AuthController extends BaseAuthController
 {
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-        Yii::$app->response->format = 'html';
-    }
+    protected $responseFormat = 'html';
 
     /**
      * @inheritdoc

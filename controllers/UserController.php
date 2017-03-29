@@ -10,11 +10,7 @@ class UserController extends BaseUserController
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        parent::init();
-        Yii::$app->response->format = 'html';
-    }
+    protected $responseFormat = 'html';
 
     /**
      * @inheritdoc

@@ -66,7 +66,7 @@ function url($url = '', $scheme = false)
 
 /**
  * Translate message
- * @param $message
+ * @param string $message
  * @param array $params
  * @return string
  */

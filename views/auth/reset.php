@@ -57,7 +57,6 @@ $this->title = 'Reset Password';
                                 <?= Html::activePasswordInput($user, $field, [
                                     'class' => 'form-control',
                                     'required' => true,
-                                    'autofocus' => true,
                                 ]); ?>
                                 <span class="help-block">
                                     <strong><?= Html::error($user, $field) ?></strong>
