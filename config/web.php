@@ -70,6 +70,7 @@ $config = [
             'enableSchemaCache' => YII_ENV_PROD,
         ],
         'urlManager' => [
+            //'class' => 'app\components\UrlManager', // also need to enable html5/history mode in SPA
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
