@@ -143,7 +143,7 @@ function buildAll(bundle) {
                     const buildTime = (Date.now() - buildStart) / 1000;
                     const totalTime = (Date.now() - importStart) / 1000;
                     gutil.log(gutil.colors.cyan(`Scripts`) + ` (${buildTime} seconds)`);
-                    gutil.log(gutil.colors.cyan(`------------------------------`));
+                    gutil.log(gutil.colors.cyan(`-----------------------`));
                     gutil.log(gutil.colors.cyan(`Total`) + `   (${totalTime} seconds)`);
                 }
             });

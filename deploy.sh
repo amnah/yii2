@@ -1,17 +1,17 @@
 #!/bin/bash
 
 echo "----------------------------------------------"
-echo "-> Start: $(date "+%Y%m%d-%H%M%S")"
+echo "-> Start: $(date "+%Y/%m/%d %H:%M:%S.%3N")"
 echo "----------------------------------------------"
-echo "-> Git branch:"
-git rev-parse --abbrev-ref HEAD
+echo "-> Git:   $(date "+%Y/%m/%d %H:%M:%S.%3N")"
+echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
 git pull
 echo "----------------------------------------------"
-echo "-> Gulp:"
+echo "-> Gulp:  $(date "+%Y/%m/%d %H:%M:%S.%3N")"
 gulp build
 echo "----------------------------------------------"
-echo "-> Yii build:"
+echo "-> Build: $(date "+%Y/%m/%d %H:%M:%S.%3N")"
 php yii build
 echo "----------------------------------------------"
-echo "-> Done: $(date "+%Y%m%d-%H%M%S")"
+echo "-> Done:  $(date "+%Y/%m/%d %H:%M:%S.%3N")"
 echo "----------------------------------------------"
