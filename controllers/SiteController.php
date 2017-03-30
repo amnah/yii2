@@ -10,16 +10,7 @@ class SiteController extends PublicController
     /**
      * @inheritdoc
      */
-    protected $checkAuth = false;
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-        Yii::$app->response->format = 'html';
-    }
+    protected $responseFormat = 'html';
 
     /**
      * @inheritdoc
