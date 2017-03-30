@@ -32,7 +32,7 @@ class Mailer extends BaseMailer
      */
     public function sendConfirmationEmail($user, $viaApi = false)
     {
-        $baseUrl = $viaApi ? 'app#/confirm' : 'auth/confirm';
+        $baseUrl = $viaApi ? '/app#/confirm' : '/auth/confirm';
         $confirmUrl = url([$baseUrl, 'email' => $user->email, 'confirmation' => $user->confirmation], true);
         return $this->compose('auth/confirmEmail', compact('user', 'confirmUrl'))
             ->setTo($user->email)
@@ -48,7 +48,7 @@ class Mailer extends BaseMailer
      */
     public function sendResetEmail($passwordReset, $viaApi = false)
     {
-        $baseUrl = $viaApi ? 'app#/reset' : 'auth/reset';
+        $baseUrl = $viaApi ? '/app#/reset' : '/auth/reset';
         $resetUrl = url([$baseUrl, 'token' => $passwordReset->token], true);
         return $this->compose('auth/resetPassword', compact('passwordReset', 'resetUrl'))
             ->setTo($passwordReset->user->email)
