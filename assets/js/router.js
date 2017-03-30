@@ -14,6 +14,7 @@ export default new VueRouter({
         { path: '/forgot', component: require('./components/forgot.vue') },
         { path: '/reset', component: require('./components/reset.vue') },
         { path: '/profile', component: require('./components/profile.vue') },
+        { path: '*', component: require('./components/404.vue') },
     ]
 })
 
