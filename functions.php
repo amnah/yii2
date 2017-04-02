@@ -89,9 +89,10 @@ function assetUrl($file) {
 
     // get manifest data
     static $manifest = false;
+    $webPath = Yii::getAlias('@app/web');
     if ($manifest === false) {
         $manifest = null;
-        $manifestFile = Yii::getAlias('@app/web') . '/compiled/manifest.json';
+        $manifestFile = "$webPath/compiled/manifest.json";
         if (file_exists($manifestFile)) {
             $manifest = json_decode(file_get_contents($manifestFile), true);
         }
@@ -101,5 +102,10 @@ function assetUrl($file) {
     $min = YII_ENV_PROD ? '.min.' : '.';
     $pathInfo = pathinfo($file);
     $file = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . $min . $pathInfo['extension'];
-    return isset($manifest[$file]) ? $manifest[$file] : $file;
+
+    // check if file exists
+    if (isset($manifest[$file]) && file_exists("$webPath{$manifest[$file]}")) {
+        return $manifest[$file];
+    }
+    return $file;
 }
