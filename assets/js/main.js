@@ -19,5 +19,8 @@ new Vue({
     router,
     components: {
         navbar: require('./components/navbar.vue')
+    },
+    render: function(createElement) {
+        return createElement('div', {attrs: {id: 'app'}},[createElement('navbar'), createElement('router-view')])
     }
 })

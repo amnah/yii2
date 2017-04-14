@@ -21,15 +21,7 @@ if (Yii::$app->user->id) {
 </head>
 <body>
 <?php $this->beginBody() ?>
-<div id="app">
-    <!-- Navbar -->
-    <navbar></navbar>
-    <!-- End Navbar -->
-
-    <!-- Router-view -->
-    <router-view></router-view>
-    <!-- End Router-view -->
-</div>
+<div id="app"></div>
 
 <!-- Config -->
 <script type="text/javascript">
