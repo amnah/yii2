@@ -13,10 +13,12 @@ $config = [
     'components' => [
         'request' => [
             'cookieValidationKey' => env('YII_KEY'),
+            'csrfCookie' => [ 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
         ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
@@ -26,6 +28,7 @@ $config = [
         ],
         'session' => [
             'class' => 'yii\redis\Session',
+            'cookieParams' => [ 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
