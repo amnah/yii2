@@ -1,22 +1,5 @@
 
 // --------------------------------------------------------
-// Configuration
-// --------------------------------------------------------
-let config = {}
-
-export function setConfig(newConfig) {
-    config = newConfig
-}
-
-export function updateConfig(key, value) {
-    config[key] = value
-}
-
-export function getConfig(name, defaultValue = null) {
-    return (name in config) ? config[name] : defaultValue
-}
-
-// --------------------------------------------------------
 // Page title
 // --------------------------------------------------------
 let pageTitleRoot = `${document.title}`

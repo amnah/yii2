@@ -5,6 +5,7 @@ import {get, post} from './api.js'
 // State
 // --------------------------------------------------------
 const state = {
+    appConfig: {},
     user: null,
     loginUrl: null,
     statusMsg: null,
@@ -14,13 +15,23 @@ const state = {
 // Getters
 // --------------------------------------------------------
 const getters = {
-    //user: state => state.user,
+    appConfig: function(state) {
+        return function(key, defaultValue = null) {
+            return (key in state.appConfig) ? state.appConfig[key] : defaultValue
+        }
+    }
 }
 
 // --------------------------------------------------------
 // Mutations
 // --------------------------------------------------------
 const mutations = {
+    appConfig(state, appConfig) {
+        state.appConfig = appConfig
+    },
+    updateAppConfig(state, data) {
+        state.appConfig = Object.assign({}, state.appConfig, data)
+    },
     user(state, user) {
         state.user = user
     },

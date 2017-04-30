@@ -1,7 +1,6 @@
 
 import store from './store.js'
 import router from './router.js'
-import {setConfig} from './functions.js'
 
 // set AppConfig
 // (first we need to transfer AppConfig.user to the store)
@@ -11,7 +10,7 @@ if (appConfig.user) {
     store.commit('user', appConfig.user)
     delete appConfig.user
 }
-setConfig(appConfig)
+store.commit('appConfig', appConfig)
 
 new Vue({
     el: '#app',

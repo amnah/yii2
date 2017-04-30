@@ -1,5 +1,4 @@
 
-import {getConfig} from './functions.js'
 import store from './store.js'
 import router from './router.js'
 
@@ -29,10 +28,9 @@ export function process(vm, data) {
 // --------------------------------------------------------
 // Ajax shortcuts
 // --------------------------------------------------------
-export {get}
-function get(url, data) {
-    const params = $.extend(defaultConfig(), {
-        url: getConfig('apiUrl') + url,
+export function get(url, data) {
+    const params = Object.assign(defaultConfig(), {
+        url: store.getters.appConfig('apiUrl') + url,
         method: 'GET',
         data: data
     });
@@ -40,8 +38,8 @@ function get(url, data) {
 }
 
 export function post(url, data) {
-    const params = $.extend(defaultConfig(), {
-        url: getConfig('apiUrl') + url,
+    const params = Object.assign(defaultConfig(), {
+        url: store.getters.appConfig('apiUrl') + url,
         method: 'POST',
         data: data
     });
@@ -54,7 +52,7 @@ export function post(url, data) {
 function defaultConfig() {
     return {
         xhrFields: { withCredentials: true }, // needed for cross domain cookies
-        headers: {'X-CSRF-Token': getConfig('csrf') }
+        headers: {'X-CSRF-Token': store.getters.appConfig('csrf') }
     }
 }
 function successCallback(data) {
