@@ -69,21 +69,6 @@ $this->title = 'Contact';
                             </div>
                         </div>
 
-                        <?php $this->beginBlock('javascript'); ?>
-                            <script type="text/javascript">
-                                new Vue({
-                                    el: '#contact-form',
-                                    methods: {
-                                        refreshCaptcha: function() {
-                                            $.ajax('/site/captcha?refresh=1&_=' + new Date().getTime()).then(function(data) {
-                                                $('#dynamicmodel-verificationcode-image').attr('src', data.url)
-                                            })
-                                        }
-                                    }
-                                })
-                            </script>
-                        <?php $this->endBlock(); ?>
-
                     <?php endif; ?>
                 </div>
             </div>

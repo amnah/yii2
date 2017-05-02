@@ -82,16 +82,6 @@ $min = !empty($min) ? '.min' : '';
     <!-- end content -->
 </div>
 
-<!-- Scripts -->
-<script src="/compiled/vendor<?= $min ?>.js"></script>
-<!--
-<script src="/compiled/compiled<?= $min ?>.js"></script>
--->
-
-<?php if (isset($this->blocks['javascript'])): ?>
-    <?= $this->blocks['javascript'] ?>
-<?php endif; ?>
-
 <?php $this->endBody() ?>
 </body>
 </html>
