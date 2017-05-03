@@ -30,6 +30,13 @@ class AuthController extends BaseAuthController
         if (isset($data['success'])) {
             return $this->goBack();
         }
+
+        // add $returnUrl (check if it's not the home page)
+        $data['returnUrl'] = Yii::$app->user->returnUrl;
+        if ($data['returnUrl'] == Yii::$app->getHomeUrl()) {
+            $data['returnUrl'] = null;
+        }
+
         return $this->render('login', $data);
     }
 

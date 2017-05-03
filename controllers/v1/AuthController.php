@@ -129,7 +129,6 @@ class AuthController extends BaseController
 
     /**
      * Forgot password
-     * @return string
      */
     public function actionForgot()
     {
@@ -157,8 +156,6 @@ class AuthController extends BaseController
 
     /**
      * Reset password
-     * @param string $token
-     * @return string
      */
     public function actionReset($token)
     {

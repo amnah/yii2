@@ -19,6 +19,7 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
+            'loginUrl' => '/auth/login',
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',

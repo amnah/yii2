@@ -2,6 +2,7 @@
 
 /** @var yii\web\View $this */
 /** @var yii\base\DynamicModel $model */
+/** @var string $returnUrl */
 
 use yii\helpers\Html;
 
@@ -14,6 +15,10 @@ $this->title = 'Login';
             <div class="panel panel-default">
                 <div class="panel-heading"><?= Html::encode($this->title) ?></div>
                 <div class="panel-body">
+
+                    <?php if ($returnUrl): ?>
+                        <p>After logging in, you will be redirected to <strong><?= $returnUrl ?></strong></p>
+                    <?php endif; ?>
 
                     <?= Html::beginForm('', 'post', ['class' => 'form-horizontal']) ?>
 
