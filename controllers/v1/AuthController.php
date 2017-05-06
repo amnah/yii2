@@ -33,6 +33,17 @@ class AuthController extends BaseController
     }
 
     /**
+     * @inheritdoc
+     */
+    public function beforeAction($action)
+    {
+        if ($action->id == 'login-api') {
+            $this->enableCsrfValidation = false;
+        }
+        return parent::beforeAction($action);
+    }
+
+    /**
      * Logout
      */
     public function actionLogout()
@@ -49,9 +60,22 @@ class AuthController extends BaseController
         /** @var User $user */
         $user = Yii::$app->user->identity;
         if ($user) {
-            return ["success" => true, "user" => $user];
+            return ['success' => true, 'user' => $user];
         }
-        return ["error" => "Not logged in"];
+        return ['error' => 'Not logged in'];
+    }
+
+    /**
+     * Perform login
+     * @param User $user
+     * @param bool $rememberMe
+     * @return array
+     */
+    protected function performLogin($user, $rememberMe = true)
+    {
+        $duration = $rememberMe ? 2592000 : 0; // 30 days
+        Yii::$app->user->login($user, $duration);
+        return ['success' => true, 'user' => $user];
     }
 
     /**
@@ -81,16 +105,22 @@ class AuthController extends BaseController
     }
 
     /**
-     * Perform login
-     * @param User $user
-     * @param bool $rememberMe
-     * @return array
+     * Login for api - get a bearer token instead of logging in via session/cookie
      */
-    protected function performLogin($user, $rememberMe = true)
+    public function actionLoginApi()
     {
-        $duration = $rememberMe ? 2592000 : 0; // 30 days
-        Yii::$app->user->login($user, $duration);
-        return ['success' => true, 'user' => $user];
+        // disable session so nothing gets saved to session/cookie
+        Yii::$app->user->enableSession = false;
+
+        // return any errors
+        $data = $this->actionLogin();
+        if (empty($data['success'])) {
+            return $data;
+        }
+
+        // create token for user
+        $data["token"] = $this->apiAuth->createTokenForUser($data['user']);
+        return $data;
     }
 
     /**

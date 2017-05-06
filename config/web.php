@@ -21,6 +21,9 @@ $config = [
             'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
             'loginUrl' => '/auth/login',
         ],
+        'apiAuth' => [
+            'class' => 'app\components\ApiAuth',
+        ],
         'redis' => [
             'class' => 'yii\redis\Connection',
         ],

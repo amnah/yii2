@@ -3,8 +3,9 @@
 namespace app\components;
 
 use Yii;
+use yii\di\Instance;
 use yii\web\Controller;
-use yii\web\UnauthorizedHttpException;
+use app\components\ApiAuth;
 
 class BaseController extends Controller
 {
@@ -17,6 +18,11 @@ class BaseController extends Controller
      * @var string Response format
      */
     protected $responseFormat = 'json';
+
+    /**
+     * @var ApiAuth ApiAuth instance
+     */
+    protected $apiAuth = 'apiAuth';
 
     /**
      * @inheritdoc
@@ -32,10 +38,7 @@ class BaseController extends Controller
             'prettyPrint' => YII_DEBUG,
         ];
 
-        // check auth
-        if ($this->checkAuth && !Yii::$app->user->id) {
-            throw new UnauthorizedHttpException;
-        }
+        $this->apiAuth = Instance::ensure($this->apiAuth, ApiAuth::className());
     }
 
     /**
@@ -47,8 +50,8 @@ class BaseController extends Controller
             return false;
         }
 
-        // check for CORS preflight OPTIONS. if so, then return false so that it doesn't run
-        // the controller action
+        // return false for CORS preflight OPTIONS
+        // this prevents the action from running
         // @link https://github.com/yiisoft/yii2/pull/8626/files
         // @link https://github.com/yiisoft/yii2/issues/6254
         if (Yii::$app->request->isOptions) {
@@ -63,21 +66,17 @@ class BaseController extends Controller
      */
     public function behaviors()
     {
-        return [
-
-            // cors filter
-            /*
-            'corsFilter' => [
-                'class' => 'yii\filters\Cors',
-            ],
-            */
-
-            // rate limiter
-            /*
-            'rateLimiter' => [
-                'class' => 'yii\filters\RateLimiter',
-            ],
-            */
+        // set base behaviors
+        $behaviors = [
+            //'corsFilter' => 'yii\filters\Cors',
         ];
+
+        // add auth behaviors
+        if ($this->checkAuth) {
+            $behaviors['apiAuth'] = $this->apiAuth;
+            $behaviors['rateLimiter'] = 'yii\filters\RateLimiter';
+        }
+
+        return $behaviors;
     }
 }
