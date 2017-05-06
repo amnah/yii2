@@ -28,8 +28,8 @@ if (Yii::$app->user->id) {
     window.AppConfig = {
         apiUrl: '/v1/',
         csrf: '<?= Yii::$app->request->csrfToken ?>',
-        user: <?= $user ?>
     };
+    window.User = <?= $user ?>;
 </script>
 
 <!-- Scripts -->

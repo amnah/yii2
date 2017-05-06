@@ -1,17 +1,24 @@
 
 import store from './store.js'
 import router from './router.js'
+import {getLocalStorage} from './functions.js'
 
 // set AppConfig
-// (first we need to transfer AppConfig.user to the store)
-const appConfig = window.AppConfig
+store.commit('appConfig', window.AppConfig)
 delete window.AppConfig
-if (appConfig.user) {
-    store.commit('user', appConfig.user)
-    delete appConfig.user
-}
-store.commit('appConfig', appConfig)
 
+// set User from window
+if (window.User) {
+    store.commit('user', window.User)
+    delete window.User
+} else if (getLocalStorage('user')) {
+    // set user from localStorage while we check the auth status asynchronously
+    // (because localStorage data could be stale)
+    store.commit('user', getLocalStorage('user'))
+    store.dispatch('checkAuth')
+}
+
+// instantiate Vue
 new Vue({
     el: '#app',
     store,

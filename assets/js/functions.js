@@ -21,3 +21,24 @@ export function setPageTitle(newTitle) {
     }
     document.title = theTitle
 }
+
+// --------------------------------------------------------
+// Local storage
+// --------------------------------------------------------
+export function setLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+}
+
+export function removeLocalStorage(key) {
+    localStorage.removeItem(key)
+}
+
+export function getLocalStorage(key, defaultValue = null) {
+    let value = localStorage.getItem(key)
+    try {
+        value = JSON.parse(value)
+    } catch(e) {
+        value = defaultValue
+    }
+    return value
+}

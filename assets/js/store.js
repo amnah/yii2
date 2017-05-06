@@ -1,5 +1,6 @@
 
 import {get, post} from './api.js'
+import {setLocalStorage} from './functions.js'
 
 // --------------------------------------------------------
 // State
@@ -34,6 +35,7 @@ const mutations = {
     },
     user(state, user) {
         state.user = user
+        setLocalStorage('user', user)
     },
     loginUrl(state, loginUrl) {
         state.loginUrl = loginUrl
