@@ -10,6 +10,11 @@ use app\components\ApiAuth;
 class BaseController extends Controller
 {
     /**
+     * @var array Csrf exceptions. Should be the action id, eg, `actionLogin` => 'login'
+     */
+    protected $csrfExceptions = [];
+
+    /**
      * @var bool Check for authorized user
      */
     protected $checkAuth = true;
@@ -46,19 +51,22 @@ class BaseController extends Controller
      */
     public function beforeAction($action)
     {
-        if (!parent::beforeAction($action)) {
-            return false;
-        }
-
-        // return false for CORS preflight OPTIONS
-        // this prevents the action from running
+        // return false for CORS preflight OPTIONS (this prevents the action from running)
         // @link https://github.com/yiisoft/yii2/pull/8626/files
         // @link https://github.com/yiisoft/yii2/issues/6254
-        if (Yii::$app->request->isOptions) {
+        if (Yii::$app->getRequest()->getIsOptions()) {
             return false;
         }
 
-        return true;
+        // disable csrf
+        // note: this needs to be called before calling parent::beforeAction()
+        $exceptions = array_fill_keys($this->csrfExceptions, 1);
+        if (isset($exceptions[$action->id])) {
+            $this->enableCsrfValidation = false;
+        }
+
+        // call parent
+        return parent::beforeAction($action);
     }
 
     /**

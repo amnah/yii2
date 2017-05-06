@@ -15,6 +15,11 @@ class AuthController extends BaseController
     /**
      * @inheritdoc
      */
+    protected $csrfExceptions = ['login-api'];
+
+    /**
+     * @inheritdoc
+     */
     protected $checkAuth = false;
 
     /**
@@ -30,17 +35,6 @@ class AuthController extends BaseController
             ],
         ];
         return $behaviors;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        if ($action->id == 'login-api') {
-            $this->enableCsrfValidation = false;
-        }
-        return parent::beforeAction($action);
     }
 
     /**
