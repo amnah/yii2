@@ -5,16 +5,16 @@ export default new VueRouter({
     //mode: 'history',
     scrollBehavior: scrollBehavior,
     routes: [
-        { path: '/', component: require('./components/index.vue') },
-        { path: '/about', component: require('./components/about.vue') },
-        { path: '/contact', component: require('./components/contact.vue') },
-        { path: '/login', component: require('./components/login.vue') },
-        { path: '/register', component: require('./components/register.vue') },
-        { path: '/confirm', component: require('./components/confirm.vue') },
-        { path: '/forgot', component: require('./components/forgot.vue') },
-        { path: '/reset', component: require('./components/reset.vue') },
-        { path: '/profile', component: require('./components/profile.vue') },
-        { path: '*', component: require('./components/404.vue') },
+        { path: '/', component: require('./pages/index.vue') },
+        { path: '/about', component: require('./pages/about.vue') },
+        { path: '/contact', component: require('./pages/contact.vue') },
+        { path: '/login', component: require('./pages/login.vue') },
+        { path: '/register', component: require('./pages/register.vue') },
+        { path: '/confirm', component: require('./pages/confirm.vue') },
+        { path: '/forgot', component: require('./pages/forgot.vue') },
+        { path: '/reset', component: require('./pages/reset.vue') },
+        { path: '/profile', component: require('./pages/profile.vue') },
+        { path: '*', component: require('./pages/404.vue') },
     ]
 })
 

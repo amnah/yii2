@@ -16,10 +16,7 @@ new Vue({
     el: '#app',
     store,
     router,
-    components: {
-        navbar: require('./components/navbar.vue')
-    },
     render: function(createElement) {
-        return createElement('div', {attrs: {id: 'app'}},[createElement('navbar'), createElement('router-view')])
+        return createElement(require('./components/app.vue'))
     }
 })
