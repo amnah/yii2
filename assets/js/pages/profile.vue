@@ -46,14 +46,15 @@ export default {
     data: function() {
         // check if user is logged in
         if (!this.$store.state.user) {
-            this.$router.push('/')
+            this.$store.commit('loginUrl', this.$route.fullPath);
+            this.$router.push('/login');
         }
         return {
             success: false,
             submitting: false,
             errors: {},
             form: {
-                username: this.$store.state.user.username,
+                username: this.$store.state.user ? this.$store.state.user.username : '',
             }
         }
     },

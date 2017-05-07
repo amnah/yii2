@@ -51,6 +51,7 @@ class AuthController extends BaseController
      */
     public function actionLogoutApi()
     {
+        Yii::$app->user->logout(); // just in case
         $token = $this->apiAuth->getTokenFromHeader(Yii::$app->request);
         $status = $this->apiAuth->removeToken($token);
         return ['success' => $status];
