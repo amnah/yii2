@@ -15,7 +15,7 @@ class AuthController extends BaseController
     /**
      * @inheritdoc
      */
-    protected $csrfExceptions = ['login-api'];
+    protected $csrfExceptions = ['logout-api', 'login-api'];
 
     /**
      * @inheritdoc
@@ -47,12 +47,33 @@ class AuthController extends BaseController
     }
 
     /**
+     * Logout for api
+     */
+    public function actionLogoutApi()
+    {
+        $status = $this->apiAuth->removeTokenFromHeader();
+        return ['success' => $status];
+    }
+
+    /**
      * Check auth status
      */
     public function actionCheckAuth()
     {
         /** @var User $user */
         $user = Yii::$app->user->identity;
+        if ($user) {
+            return ['success' => true, 'user' => $user];
+        }
+        return ['error' => 'Not logged in'];
+    }
+
+    /**
+     * Check auth status for api
+     */
+    public function actionCheckAuthApi()
+    {
+        $user = $this->apiAuth->getUserFromTokenInHeader();
         if ($user) {
             return ['success' => true, 'user' => $user];
         }
@@ -99,7 +120,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * Login for api - get a bearer token instead of logging in via session/cookie
+     * Login for api (get a bearer token instead of logging in via session/cookie)
      */
     public function actionLoginApi()
     {

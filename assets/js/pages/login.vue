@@ -79,10 +79,16 @@ export default {
         submit: function(e) {
             const vm = this
             reset(vm)
-            post('auth/login', {DynamicModel: vm.form}).then(function(data) {
+
+            // determine which login endpoint to call (stateful vs stateless)
+            const url = this.$store.getters.appConfig('csrf') ? 'auth/login' : 'auth/login-api'
+            post(url, {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)
                 if (data.success) {
                     vm.$store.commit('user', data.user)
+                    if (data.token) {
+                        vm.$store.commit('appConfigToken', data.token)
+                    }
                     if (vm.$store.state.loginUrl) {
                         vm.$store.commit('loginUrl', null)
                     }

@@ -30,8 +30,9 @@ const mutations = {
     appConfig(state, appConfig) {
         state.appConfig = appConfig
     },
-    updateAppConfig(state, data) {
-        state.appConfig = Object.assign({}, state.appConfig, data)
+    appConfigToken(state, token) {
+        state.appConfig.token = token
+        setLocalStorage('token', token)
     },
     user(state, user) {
         state.user = user
@@ -50,8 +51,12 @@ const mutations = {
 // --------------------------------------------------------
 const actions = {
     logout(store) {
+        // make post request first before clearing out store variables
+        // note that we don't wait until it succeeds. logout should be instantaneous
+        const url = store.state.appConfig.csrf ? 'auth/logout' : 'auth/logout-api'
+        post(url)
+        store.commit('appConfigToken', null)
         store.commit('user', null)
-        return post('auth/logout')
     },
     checkAuth(store) {
         return get('auth/check-auth').then(function(data) {

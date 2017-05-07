@@ -50,10 +50,17 @@ export function post(url, data) {
 // Ajax callback helper functions
 // --------------------------------------------------------
 function defaultConfig() {
-    return {
-        xhrFields: { withCredentials: true }, // needed for cross domain cookies
-        headers: {'X-CSRF-Token': store.getters.appConfig('csrf') }
+    if (store.getters.appConfig('csrf')) {
+        return {
+            xhrFields: { withCredentials: true }, // needed for cross domain cookies
+            headers: { 'X-CSRF-Token': store.getters.appConfig('csrf') }
+        }
+    } else if (store.getters.appConfig('token')) {
+        return {
+            headers: { 'Authorization': `Bearer ${store.getters.appConfig('token')}` }
+        }
     }
+    return {}
 }
 function successCallback(data) {
     return data;

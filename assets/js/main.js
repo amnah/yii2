@@ -4,7 +4,9 @@ import router from './router.js'
 import {getLocalStorage} from './functions.js'
 
 // set AppConfig
-store.commit('appConfig', window.AppConfig)
+let appConfig = {apiUrl: '/v1/', token: getLocalStorage('token')}
+appConfig = Object.assign(appConfig, window.AppConfig)
+store.commit('appConfig', appConfig)
 delete window.AppConfig
 
 // set User from window

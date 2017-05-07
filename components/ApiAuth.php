@@ -5,6 +5,7 @@ namespace app\components;
 use Yii;
 use yii\di\Instance;
 use yii\redis\Connection;
+use yii\web\Request;
 use yii\web\User as UserComponent;
 use app\models\User;
 
@@ -49,21 +50,21 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
             return $userComponent->identity;
         }
 
-        // check bearer token
-        $authHeader = $request->getHeaders()->get('Authorization');
-        if ($authHeader && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
-
-            // attempt to login via token
-            $user = $this->checkToken($matches[1], $userComponent);
-            if ($user) {
-                // disable session and csrf validation (for stateless request)
-                $userComponent->enableSession = false;
-                $request->enableCsrfValidation = false;
-                return $userComponent->login($user) ? $user : null;
-            }
-            return $this->handleFailure($response);
+        // check for bearer token
+        $token = $this->getBearerTokenFromHeader($request);
+        if (!$token) {
+            return null;
         }
-        return null;
+
+        // attempt to login via token
+        $user = $this->checkToken($token, $userComponent);
+        if ($user) {
+            // disable session and csrf validation (for stateless request)
+            $userComponent->enableSession = false;
+            $request->enableCsrfValidation = false;
+            return $userComponent->login($user) ? $user : null;
+        }
+        return $this->handleFailure($response);
     }
 
     /**
@@ -76,6 +77,20 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
             return $user->loginRequired();
         }
         return parent::handleFailure($response);
+    }
+
+    /**
+     * Get bearer token from header
+     * @param Request $request
+     * @return string|null
+     */
+    protected function getBearerTokenFromHeader($request)
+    {
+        $authHeader = $request->getHeaders()->get('Authorization');
+        if ($authHeader && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
+            return $matches[1];
+        }
+        return null;
     }
 
     /**
@@ -175,5 +190,49 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
 
         // return the token
         return $token;
+    }
+
+    /**
+     * Remove token in header
+     * @return bool
+     */
+    public function removeTokenFromHeader()
+    {
+        $request = $this->request ?: Yii::$app->getRequest();
+        $token = $this->getBearerTokenFromHeader($request);
+        $tokenKey = $this->tokenKey($token);
+
+        // check for existence by getting user_id and then remove data
+        $userId = $this->redis->executeCommand('HGET', [$tokenKey, 'user_id']);
+        if ($userId) {
+            $userKey = $this->userKey($userId);
+            $this->redis->executeCommand('SREM', [$userKey, $token]);
+            $this->redis->executeCommand('DEL', [$tokenKey]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get user from token in headers
+     * @return User
+     */
+    public function getUserFromTokenInHeader()
+    {
+        $request = $this->request ?: Yii::$app->getRequest();
+        $token = $this->getBearerTokenFromHeader($request);
+        $tokenKey = $this->tokenKey($token);
+
+        // check for existence by getting user_id and then remove data
+        $userId = $this->redis->executeCommand('HGET', [$tokenKey, 'user_id']);
+        if ($userId) {
+            /** @var User $user */
+            $userComponent = $this->user ?: Yii::$app->getUser();
+            $user = $userComponent->identityClass;
+            return $user::findIdentity($userId);
+        }
+
+        return null;
     }
 }
