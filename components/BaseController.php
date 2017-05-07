@@ -5,7 +5,6 @@ namespace app\components;
 use Yii;
 use yii\di\Instance;
 use yii\web\Controller;
-use app\components\ApiAuth;
 
 class BaseController extends Controller
 {
@@ -82,7 +81,7 @@ class BaseController extends Controller
         // add auth behaviors
         if ($this->checkAuth) {
             $behaviors['apiAuth'] = $this->apiAuth;
-            $behaviors['rateLimiter'] = 'yii\filters\RateLimiter';
+            //$behaviors['rateLimiter'] = 'yii\filters\RateLimiter';
         }
 
         return $behaviors;
