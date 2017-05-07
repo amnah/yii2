@@ -3,7 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\filters\RateLimitInterface;
 use yii\web\IdentityInterface;
+use app\components\ApiAuth;
 use app\components\BaseModel;
 
 /**
@@ -20,7 +22,7 @@ use app\components\BaseModel;
  *
  * @property PasswordReset[] $passwordResets
  */
-class User extends BaseModel implements IdentityInterface
+class User extends BaseModel implements IdentityInterface, RateLimitInterface
 {
     const SCENARIO_REGISTER = 'register';
     const SCENARIO_RESET = 'reset';
@@ -30,6 +32,14 @@ class User extends BaseModel implements IdentityInterface
      * @var string
      */
     public $confirm_password;
+
+    /**
+     * @return ApiAuth
+     */
+    protected function getApiAuth()
+    {
+        return Yii::$app->get('apiAuth');
+    }
 
     /**
      * @inheritdoc
@@ -110,6 +120,30 @@ class User extends BaseModel implements IdentityInterface
     {
         return null;
         //return static::findOne(["access_token" => $token]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRateLimit($request, $action)
+    {
+        return $this->getApiAuth()->getRateLimit($request, $action);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function loadAllowance($request, $action)
+    {
+        return $this->getApiAuth()->loadAllowance($request, $action);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function saveAllowance($request, $action, $allowance, $timestamp)
+    {
+        return $this->getApiAuth()->saveAllowance($request, $action, $allowance, $timestamp);
     }
 
     /**

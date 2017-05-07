@@ -4,16 +4,16 @@ namespace app\components;
 
 use Yii;
 use yii\di\Instance;
+use yii\filters\RateLimitInterface;
 use yii\redis\Connection;
 use yii\web\Request;
-use yii\web\User as UserComponent;
 use app\models\User;
 
 /**
  * Authentication for api
  * This class checks for auth status from 1) cookies or 2) redis
  */
-class ApiAuth extends \yii\filters\auth\HttpBearerAuth
+class ApiAuth extends \yii\filters\auth\HttpBearerAuth implements RateLimitInterface
 {
     /**
      * @var Connection|string|array
@@ -26,7 +26,17 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
     public $defaultTtl = 604800; // 604800 = 1 week
 
     /**
-     * @var array Token data from redis
+     * @var array Rate limit requests per second, eg, [120, 60] = 120 requests per 60 seconds
+     */
+    public $rateLimit = [120, 60];
+
+    /**
+     * @var string Token from header. This will not be set in stateful requests
+     */
+    protected $token = null;
+
+    /**
+     * @var array Token data from redis. This will not be set in stateful requests
      */
     protected $tokenData = null;
 
@@ -162,6 +172,7 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
         }
 
         // store token data and return user
+        $this->token = $token;
         $this->tokenData = $data;
         return $user;
     }
@@ -213,5 +224,36 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
         }
 
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRateLimit($request, $action)
+    {
+        return $this->rateLimit;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function loadAllowance($request, $action)
+    {
+        $tokenData = $this->tokenData;
+        $allowance = isset($tokenData['allowance']) ? $tokenData['allowance'] : 0;
+        $allowanceUpdatedAt = isset($tokenData['allowance_updated_at']) ? $tokenData['allowance_updated_at'] : 0;
+        return [$allowance, $allowanceUpdatedAt];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function saveAllowance($request, $action, $allowance, $timestamp)
+    {
+        // update allowance only if we have a token (stateless requests only)
+        if ($this->token) {
+            $tokenKey = $this->tokenKey($this->token);
+            $this->redis->executeCommand('HMSET', [$tokenKey, 'allowance', $allowance, 'allowance_updated_at', $timestamp]);
+        }
     }
 }
