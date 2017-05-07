@@ -59,7 +59,8 @@ const actions = {
         store.commit('user', null)
     },
     checkAuth(store) {
-        return get('auth/check-auth').then(function(data) {
+        const url = store.state.appConfig.csrf ? 'auth/check-auth' : 'auth/check-auth-api'
+        return get(url).then(function(data) {
             const user = data.user || null
             store.commit('user', user)
         })

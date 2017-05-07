@@ -51,7 +51,8 @@ class AuthController extends BaseController
      */
     public function actionLogoutApi()
     {
-        $status = $this->apiAuth->removeTokenFromHeader();
+        $token = $this->apiAuth->getTokenFromHeader(Yii::$app->request);
+        $status = $this->apiAuth->removeToken($token);
         return ['success' => $status];
     }
 
@@ -73,7 +74,8 @@ class AuthController extends BaseController
      */
     public function actionCheckAuthApi()
     {
-        $user = $this->apiAuth->getUserFromTokenInHeader();
+        $token = $this->apiAuth->getTokenFromHeader(Yii::$app->request);
+        $user = $this->apiAuth->getUserByToken($token);
         if ($user) {
             return ['success' => true, 'user' => $user];
         }

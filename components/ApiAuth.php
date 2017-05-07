@@ -51,13 +51,14 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
         }
 
         // check for bearer token
-        $token = $this->getBearerTokenFromHeader($request);
+        $token = $this->getTokenFromHeader($request);
         if (!$token) {
             return null;
         }
 
         // attempt to login via token
-        $user = $this->checkToken($token, $userComponent);
+        $increaseNumUses = true;
+        $user = $this->getUserByToken($token, $increaseNumUses);
         if ($user) {
             // disable session and csrf validation (for stateless request)
             $userComponent->enableSession = false;
@@ -84,7 +85,7 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
      * @param Request $request
      * @return string|null
      */
-    protected function getBearerTokenFromHeader($request)
+    public function getTokenFromHeader($request)
     {
         $authHeader = $request->getHeaders()->get('Authorization');
         if ($authHeader && preg_match('/^Bearer\s+(.*?)$/', $authHeader, $matches)) {
@@ -128,24 +129,24 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
     }
 
     /**
-     * Check token and log user in
-     * @param $token
-     * @param UserComponent $userComponent
+     * Get user by token
+     * @param string $token
+     * @param bool $increaseNumUses
      * @return User|null
      */
-    protected function checkToken($token, $userComponent)
+    public function getUserByToken($token, $increaseNumUses = false)
     {
-        // attempt to increase the num_uses field and check the result
-        // if successful, we know that
+        // get hash data from redis
         $tokenKey = $this->tokenKey($token);
         $data = $this->redis->executeCommand('HGETALL', [$tokenKey]);
         if (!$data) {
             return null;
         }
 
-        /** @var User $user */
         // look up user
+        /** @var User $user */
         $data = $this->parseRedisData($data);
+        $userComponent = $this->user ?: Yii::$app->getUser();
         $user = $userComponent->identityClass;
         $user = $user::findIdentity($data['user_id']);
         if (!$user) {
@@ -153,9 +154,11 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
         }
 
         // update redis data
-        $this->redis->executeCommand('HINCRBY', [$tokenKey, 'num_uses', 1]);
         if (!empty($data['ttl'])) {
             $this->redis->executeCommand('EXPIRE', [$tokenKey, $data['ttl']]);
+        }
+        if ($increaseNumUses) {
+            $this->redis->executeCommand('HINCRBY', [$tokenKey, 'num_uses', 1]);    
         }
 
         // store token data and return user
@@ -193,16 +196,14 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
     }
 
     /**
-     * Remove token in header
+     * Remove token
+     * @param string $token
      * @return bool
      */
-    public function removeTokenFromHeader()
+    public function removeToken($token)
     {
-        $request = $this->request ?: Yii::$app->getRequest();
-        $token = $this->getBearerTokenFromHeader($request);
-        $tokenKey = $this->tokenKey($token);
-
         // check for existence by getting user_id and then remove data
+        $tokenKey = $this->tokenKey($token);
         $userId = $this->redis->executeCommand('HGET', [$tokenKey, 'user_id']);
         if ($userId) {
             $userKey = $this->userKey($userId);
@@ -212,27 +213,5 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth
         }
 
         return false;
-    }
-
-    /**
-     * Get user from token in headers
-     * @return User
-     */
-    public function getUserFromTokenInHeader()
-    {
-        $request = $this->request ?: Yii::$app->getRequest();
-        $token = $this->getBearerTokenFromHeader($request);
-        $tokenKey = $this->tokenKey($token);
-
-        // check for existence by getting user_id and then remove data
-        $userId = $this->redis->executeCommand('HGET', [$tokenKey, 'user_id']);
-        if ($userId) {
-            /** @var User $user */
-            $userComponent = $this->user ?: Yii::$app->getUser();
-            $user = $userComponent->identityClass;
-            return $user::findIdentity($userId);
-        }
-
-        return null;
     }
 }
