@@ -13,12 +13,12 @@ $config = [
     'components' => [
         'request' => [
             'cookieValidationKey' => env('YII_KEY'),
-            'csrfCookie' => [ 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
+            'csrfCookie' => [ 'httpOnly' => true, 'secure' => isset($_SERVER['HTTPS']) ],
         ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
+            'identityCookie' => ['name' => '_identity', 'httpOnly' => true, 'secure' => isset($_SERVER['HTTPS']) ],
             'loginUrl' => '/auth/login',
         ],
         'apiAuth' => [
@@ -32,7 +32,7 @@ $config = [
         ],
         'session' => [
             'class' => 'yii\redis\Session',
-            'cookieParams' => [ 'httpOnly' => true, 'secure' => YII_ENV_PROD ],
+            'cookieParams' => [ 'httpOnly' => true, 'secure' => isset($_SERVER['HTTPS']) ],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
