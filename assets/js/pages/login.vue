@@ -80,7 +80,7 @@ export default {
             const vm = this
             reset(vm)
 
-            // determine which login endpoint to call (stateful vs stateless)
+            // determine which login endpoint to call (regular login for api login)
             const url = this.$store.getters.appConfig('csrf') ? 'auth/login' : 'auth/login-api'
             post(url, {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)

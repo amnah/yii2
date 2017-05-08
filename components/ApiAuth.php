@@ -67,10 +67,10 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth implements RateLimitInter
         }
 
         // attempt to login via token
+        // if successful, disable session and csrf
         $increaseNumUses = true;
         $user = $this->getUserByToken($token, $increaseNumUses);
         if ($user) {
-            // disable session and csrf validation (for stateless request)
             $userComponent->enableSession = false;
             $request->enableCsrfValidation = false;
             return $userComponent->login($user) ? $user : null;
@@ -250,7 +250,7 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth implements RateLimitInter
      */
     public function saveAllowance($request, $action, $allowance, $timestamp)
     {
-        // update allowance only if we have a token (stateless requests only)
+        // update allowance only if we have a token (api requests only)
         if ($this->token) {
             $tokenKey = $this->tokenKey($this->token);
             $this->redis->executeCommand('HMSET', [$tokenKey, 'allowance', $allowance, 'allowance_updated_at', $timestamp]);

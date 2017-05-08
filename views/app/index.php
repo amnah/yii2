@@ -25,7 +25,7 @@ if (Yii::$app->user->id) {
 
 <!-- Config -->
 <script type="text/javascript">
-    // comment all of these out to use the stateless api authentication
+    // comment all of these out to use the api authentication
     window.AppConfig = {
         apiUrl: '/v1/',
         csrf: '<?= Yii::$app->request->csrfToken ?>',
