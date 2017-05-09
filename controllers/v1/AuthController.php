@@ -51,10 +51,12 @@ class AuthController extends BaseController
      */
     public function actionLogoutApi()
     {
+        // logout, remove token, and remove expired tokens for user
         Yii::$app->user->logout(); // just in case
         $token = $this->apiAuth->getTokenFromHeader(Yii::$app->request);
-        $status = $this->apiAuth->removeToken($token);
-        return ['success' => $status];
+        $userId = $this->apiAuth->removeToken($token);
+        $this->apiAuth->getUserTokens($userId);
+        return ['success' => true];
     }
 
     /**
@@ -136,7 +138,8 @@ class AuthController extends BaseController
             return $data;
         }
 
-        // create token for user
+        // remove expired tokens for user and then create new token
+        $this->apiAuth->getUserTokens($data['user']->id);
         $data["token"] = $this->apiAuth->createTokenForUser($data['user']);
         return $data;
     }

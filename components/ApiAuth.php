@@ -209,7 +209,7 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth implements RateLimitInter
     /**
      * Remove token
      * @param string $token
-     * @return bool
+     * @return int|bool Return user id if successful, otherwise false
      */
     public function removeToken($token)
     {
@@ -220,10 +220,39 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth implements RateLimitInter
             $userKey = $this->userKey($userId);
             $this->redis->executeCommand('SREM', [$userKey, $token]);
             $this->redis->executeCommand('DEL', [$tokenKey]);
-            return true;
+            return $userId;
         }
 
         return false;
+    }
+
+    /**
+     * Get valid user tokens (just the tokens, not the actual data)
+     * @param int $userId
+     * @return array
+     */
+    public function getUserTokens($userId)
+    {
+        // get all tokens for user
+        $userKey = $this->userKey($userId);
+        $tokens = $this->redis->executeCommand('SMEMBERS', [$userKey]);
+
+        // check for expired tokens
+        $expiredTokens = [];
+        foreach ($tokens as $k => $token) {
+            if (!$this->redis->executeCommand('EXISTS', [$this->tokenKey($token)])) {
+                $expiredTokens[] = $token;
+                unset($tokens[$k]);
+            }
+        }
+
+        // delete tokens from redis set
+        if ($expiredTokens) {
+            array_unshift($expiredTokens, $userKey);
+            $this->redis->executeCommand('SREM', $expiredTokens);
+        }
+
+        return array_values($tokens);
     }
 
     /**
