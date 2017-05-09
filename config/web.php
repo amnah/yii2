@@ -14,6 +14,7 @@ $config = [
         'request' => [
             'cookieValidationKey' => env('YII_KEY'),
             'csrfCookie' => [ 'httpOnly' => true, 'secure' => isset($_SERVER['HTTPS']) ],
+            'parsers' => [ 'application/json' => 'yii\web\JsonParser' ],
         ],
         'user' => [
             'identityClass' => 'app\models\User',
