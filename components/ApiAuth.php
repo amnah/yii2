@@ -23,7 +23,7 @@ class ApiAuth extends \yii\filters\auth\HttpBearerAuth implements RateLimitInter
     /**
      * @var int Default expire time (seconds)
      */
-    public $defaultTtl = 604800; // 604800 = 1 week
+    public $defaultTtl = 172800; // 604800 = 1 week, 172800 = 48 hours
 
     /**
      * @var array Rate limit requests per second, eg, [120, 60] = 120 requests per 60 seconds
