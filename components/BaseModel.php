@@ -101,7 +101,7 @@ class BaseModel extends ActiveRecord
     {
         $model = static::firstOrNew($attributes);
         if ($model->isNewRecord) {
-            $model->save();
+            $model->save(false);
         }
         return $model;
     }

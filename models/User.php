@@ -34,14 +34,6 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface
     public $confirm_password;
 
     /**
-     * @return ApiAuth
-     */
-    protected function getApiAuth()
-    {
-        return Yii::$app->get('apiAuth');
-    }
-
-    /**
      * @inheritdoc
      */
     public function scenarios()
@@ -120,6 +112,14 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface
     {
         return null;
         //return static::findOne(["access_token" => $token]);
+    }
+
+    /**
+     * @return ApiAuth
+     */
+    protected function getApiAuth()
+    {
+        return Yii::$app->get('apiAuth');
     }
 
     /**

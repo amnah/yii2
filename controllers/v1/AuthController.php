@@ -218,7 +218,8 @@ class AuthController extends BaseController
         $user = $passwordReset->user;
         $user->clearPassword()->setScenario(User::SCENARIO_RESET);
         if ($user->loadPostAndSave()) {
-            // consume $passwordReset and login
+            // clear confirmation, consume $passwordReset, and login
+            $user->clearConfirmationToken();
             $passwordReset->consume();
             return $this->performLogin($user);
         }
