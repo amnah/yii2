@@ -47,9 +47,10 @@ $min = !empty($min) ? '.min' : '';
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
+                <!--
                 <ul class="nav navbar-nav">
-                    &nbsp;
                 </ul>
+                -->
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
@@ -81,6 +82,10 @@ $min = !empty($min) ? '.min' : '';
     <?= $content ?>
     <!-- end content -->
 </div>
+
+<!-- scripts -->
+<script src="/compiled/vendor<?= $min ?>.js"></script>
+<!-- end scripts -->
 
 <?php $this->endBody() ?>
 </body>
