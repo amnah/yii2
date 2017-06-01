@@ -13,7 +13,6 @@
                         </div>
 
                         <p v-if="user">Logged in as <strong>{{ user.email }}</strong></p>
-                        <p><a href="/">Regular site (non-Vue)</a></p>
                         <p v-if="!user"><router-link to="/login">Login</router-link></p>
                         <p v-if="!user"><router-link to="/forgot">Forgot</router-link></p>
                         <p v-if="!user"><router-link to="/register">Register</router-link></p>

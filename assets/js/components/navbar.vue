@@ -25,6 +25,7 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
+                    <a href="/" @click="collapse">Non-Vue Site</a>
                     <router-link tag="li" to="/about" @click.native="collapse"><a>About</a></router-link>
                     <router-link tag="li" to="/contact" @click.native="collapse"><a>Contact</a></router-link>
 
