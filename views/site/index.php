@@ -19,6 +19,7 @@ $this->title = 'My Yii Application';
                     </div>
                     <?php endif; ?>
 
+                    <p><a href="<?= url('/app') ?>">Vue App</a></p>
                     <?php if (Yii::$app->user->id): ?>
                         <p>Logged in as <?= Yii::$app->user->identity->email ?></p>
                     <?php else: ?>
