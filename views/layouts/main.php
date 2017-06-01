@@ -54,7 +54,7 @@ $min = !empty($min) ? '.min' : '';
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="<?= url('/app') ?>">Vue App</a></li>
+                    <li><a href="<?= url('/app') ?>">App</a></li>
                     <li><a href="<?= url('/site/about') ?>">About</a></li>
                     <li><a href="<?= url('/site/contact') ?>">Contact</a></li>
 
