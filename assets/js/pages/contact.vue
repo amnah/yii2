@@ -117,8 +117,8 @@ export default {
             post('public/contact', {DynamicModel: vm.form}).then(function(data) {
                 process(vm, data)
 
-                // refresh captcha if user failed three times
-                if (vm.numSubmitted == 3) {
+                // refresh captcha if user failed three times (set in the backend via CaptchaAction::$testLimit)
+                if (vm.numSubmitted === 3) {
                     vm.refreshCaptcha()
                     vm.numSubmitted = 0
                 }
