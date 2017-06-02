@@ -8,7 +8,6 @@ use yii\helpers\Html;
 
 $user = Yii::$app->user->identity;
 $request = Yii::$app->request;
-$min = !empty($min) ? '.min' : '';
 
 ?>
 <!DOCTYPE html>
@@ -21,8 +20,8 @@ $min = !empty($min) ? '.min' : '';
 
     <title><?= Html::encode($this->title) ?></title>
 
-    <link href="/compiled/vendor<?= $min ?>.css" rel="stylesheet">
-    <link href="/compiled/compiled<?= $min ?>.css" rel="stylesheet">
+    <link href="<?= assetUrl("/compiled/vendor.css") ?>" rel="stylesheet">
+    <link href="<?= assetUrl("/compiled/compiled.css") ?>" rel="stylesheet">
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -85,7 +84,7 @@ $min = !empty($min) ? '.min' : '';
 </div>
 
 <!-- scripts -->
-<script src="/compiled/vendor<?= $min ?>.js"></script>
+<script src="<?= assetUrl("/compiled/vendor.js") ?>"></script>
 <!-- end scripts -->
 
 <?php $this->endBody() ?>
