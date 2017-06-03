@@ -78,6 +78,7 @@ $this->title = 'Register';
                     <div class="form-group">
                         <div class="col-md-8 col-md-offset-4">
                             <button type="submit" class="btn btn-primary">Register</button>
+                            <a class="btn btn-link" href="<?= url('/auth/login') ?>">Login</a>
                         </div>
                     </div>
 
