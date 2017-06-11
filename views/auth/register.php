@@ -25,7 +25,6 @@ $this->title = 'Register';
                                 'class' => 'form-control',
                                 'required' => true,
                                 'type' => 'email',
-                                'autofocus' => true,
                             ]); ?>
                             <span class="help-block">
                                 <strong><?= Html::error($user, $field) ?></strong>

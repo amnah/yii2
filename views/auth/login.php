@@ -29,7 +29,6 @@ $this->title = 'Login';
                             <?= Html::activeTextInput($model, $field, [
                                 'class' => 'form-control',
                                 'required' => true,
-                                'autofocus' => true,
                             ]); ?>
                             <span class="help-block">
                                 <strong><?= Html::error($model, $field) ?></strong>

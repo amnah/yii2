@@ -33,7 +33,6 @@ $this->title = 'Forgot Password';
                                     'class' => 'form-control',
                                     'required' => true,
                                     'type' => 'email',
-                                    'autofocus' => true,
                                 ]); ?>
                                 <span class="help-block">
                                     <strong><?= Html::error($model, $field) ?></strong>
