@@ -14,7 +14,6 @@ const flatten = require('gulp-flatten')
 const sass = require('gulp-sass')
 const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
-const assign = require('lodash.assign')
 const buffer = require('vinyl-buffer')
 const source = require('vinyl-source-stream')
 const watchify = require('watchify')
@@ -44,7 +43,7 @@ const customOpts = {
     entries: [`${assetPath}/js/main.js`],
     debug: true
 }
-const browserifyOpts = assign({}, watchify.args, customOpts)
+const browserifyOpts = Object.assign({}, watchify.args, customOpts)
 const watchifyOpts = {ignoreWatch: ['**/node_modules/**', 'vendor/**', '**/*.php']}
 if (pollInterval) {
     watchifyOpts.poll = pollInterval
