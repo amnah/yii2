@@ -5,7 +5,10 @@ const importStart = Date.now()
 const gutil = require('gulp-util')
 gutil.log(`Importing packages ...`)
 
+const fs = require('fs')
 const path = require('path')
+
+const babelify = require('babelify')
 const browserify = require('browserify')
 const gulp = require('gulp')
 const cleanCSS = require('gulp-clean-css')
@@ -16,9 +19,8 @@ const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
 const buffer = require('vinyl-buffer')
 const source = require('vinyl-source-stream')
-const watchify = require('watchify')
-const babelify = require('babelify')
 const vueify = require('vueify')
+const watchify = require('watchify')
 
 const cyan = gutil.colors.cyan
 const importTime = (Date.now() - importStart) /  1000
@@ -70,6 +72,9 @@ let jsFiles
 let cssFiles
 let isBuildOnly = true
 
+let proxyUrl
+let browserSync
+
 // Build task
 gulp.task('default', ['build'])
 gulp.task('build', function() {
@@ -102,6 +107,14 @@ gulp.task('watch', ['build'], function() {
         buildAssets()
     })
     isBuildOnly = false
+
+    // set up browserSync proxy
+    const proxyFile = './.proxy'
+    if (fs.existsSync(proxyFile)) {
+        proxyUrl = fs.readFileSync(proxyFile, 'utf8').trim()
+        browserSync = require('browser-sync').create()
+        browserSync.init({proxy: proxyUrl, open: false})
+    }
 })
 
 
@@ -147,6 +160,8 @@ function buildAssets() {
                 gutil.log(cyan(`Scripts`) + ` (${buildTime} seconds)`)
                 gutil.log(cyan(`-----------------------`))
                 gutil.log(cyan(`Total`) + `   (${totalTime} seconds)`)
+            } else if (browserSync) {
+                browserSync.reload()
             }
         })
 
