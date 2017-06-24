@@ -10,6 +10,10 @@ $config = [
     'language' => 'en-US',
     'params' => require_once __DIR__ . '/params.php',
     'bootstrap' => ['log'],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'components' => [
         'request' => [
             'cookieValidationKey' => env('YII_KEY'),
