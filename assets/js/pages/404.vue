@@ -8,7 +8,7 @@
 
                     <div class="panel-body">
                         <p>Page not found</p>
-                        <p><strong>{{ fullPath }}</strong></p>
+                        <p><strong>{{ this.$route.fullPath }}</strong></p>
                     </div>
                 </div>
             </div>
@@ -22,11 +22,6 @@ export default {
     name: 'error404',
     created: function() {
         setPageTitle('404')
-    },
-    data: function() {
-        return {
-            fullPath: this.$route.fullPath
-        }
     }
 }
 </script>
