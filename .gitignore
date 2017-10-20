@@ -37,3 +37,6 @@ node_modules
 
 # compiled gulp assets
 /web/compiled*
+
+# proxy file
+.proxy
