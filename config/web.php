@@ -101,6 +101,14 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => $debugModule,
         'allowedIPs' => ['*'],
+        /*
+        'panels' => [
+            'user' => [
+                'class'=>'yii\debug\panels\UserPanel',
+                'ruleUserSwitch' => [ 'allow' => true ]
+            ]
+        ]
+        */
     ];
 
     $config['bootstrap'][] = 'gii';
