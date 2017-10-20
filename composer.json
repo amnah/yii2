@@ -40,16 +40,13 @@
         }
     },
     "scripts": {
+        "post-install-cmd": [
+            "yii\\composer\\Installer::postInstall"
+        ],
         "post-create-project-cmd": [
             "yii\\composer\\Installer::postCreateProject"
         ]
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ],
     "extra": {
         "yii\\composer\\Installer::postCreateProject": {
             "setPermission": [
@@ -58,10 +55,18 @@
                     "web/assets": "0777",
                     "yii": "0755"
                 }
-            ],
+            ]
+        },
+        "yii\\composer\\Installer::postInstall": {
             "generateCookieValidationKey": [
                 "config/web.php"
             ]
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

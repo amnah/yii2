@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Url as Url;
 
 class LoginCest
