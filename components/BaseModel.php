@@ -4,6 +4,7 @@ namespace app\components;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 class BaseModel extends ActiveRecord
 {
@@ -26,7 +27,7 @@ class BaseModel extends ActiveRecord
      */
     public static function getTimestampValue()
     {
-        return date('Y-m-d H:i:s');
+        return new Expression('NOW()');
     }
 
     /**
