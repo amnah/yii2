@@ -15,10 +15,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.13",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "yiisoft/yii2-redis": "^2.0",
+        "yiisoft/yii2": "^2.0.13",
+        "yiisoft/yii2-bootstrap": "^2.0.0",
+        "yiisoft/yii2-swiftmailer": "^2.0.0",
+        "yiisoft/yii2-redis": "^2.0.0",
         "amnah/yii2-debug": "dev-master"
     },
     "require-dev": {
