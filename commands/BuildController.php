@@ -4,6 +4,7 @@ namespace app\commands;
 
 use Yii;
 use yii\console\Controller;
+use yii\console\ExitCode;
 use yii\helpers\Console;
 
 /**
@@ -12,7 +13,11 @@ use yii\helpers\Console;
 class BuildController extends Controller
 {
     public $hashLength = 15;
-    
+
+    /**
+     * Cleans up and builds assets
+     *  @return int Exit code
+     */
     public function actionIndex()
     {
         // determine webpath
@@ -73,6 +78,8 @@ class BuildController extends Controller
             $this->stdout("Removing files [ $cmd ]\n", Console::FG_YELLOW);
             shell_exec($cmd);
         }
+
+        return ExitCode::OK;
     }
 
     public function actionClear()
